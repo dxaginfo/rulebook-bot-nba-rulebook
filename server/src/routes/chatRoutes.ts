@@ -1,12 +1,11 @@
 import express from 'express';
-import { v4 as uuidv4 } from 'uuid';
 import chatController from '../controllers/chatController';
 
 const router = express.Router();
 
 /**
  * @route   POST /api/chat/message
- * @desc    Send a message to the chat bot
+ * @desc    Send a message to the chatbot
  * @access  Public
  */
 router.post('/message', chatController.sendMessage);
