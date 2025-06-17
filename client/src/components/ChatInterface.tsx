@@ -3,41 +3,40 @@ import {
   Box,
   Paper,
   TextField,
-  Button,
-  Typography,
   IconButton,
+  Typography,
+  Button,
   Divider,
   CircularProgress,
-  Tooltip
+  useTheme,
+  useMediaQuery
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import DeleteIcon from '@mui/icons-material/Delete';
-import SportsBasketballIcon from '@mui/icons-material/SportsBasketball';
 import MessageBubble from './MessageBubble';
 import { useChat } from '../contexts/ChatContext';
 
-/**
- * Main chat interface component
- */
 const ChatInterface: React.FC = () => {
-  const [inputValue, setInputValue] = useState('');
   const { messages, loading, sendMessage, clearChat } = useChat();
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [input, setInput] = useState('');
+  const endOfMessagesRef = useRef<HTMLDivElement>(null);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   
-  // Scroll to bottom when messages change
+  // Scroll to bottom whenever messages change
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
   
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    endOfMessagesRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
   
-  const handleSendMessage = async () => {
-    if (inputValue.trim() === '') return;
-    
-    await sendMessage(inputValue);
-    setInputValue('');
+  const handleSendMessage = () => {
+    if (input.trim() && !loading) {
+      sendMessage(input.trim());
+      setInput('');
+    }
   };
   
   const handleKeyPress = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -47,153 +46,136 @@ const ChatInterface: React.FC = () => {
     }
   };
   
-  // Sample suggested questions
-  const suggestedQuestions = [
-    'What is a traveling violation?',
-    'Can you explain the shot clock rules?',
-    'What are the rules for goaltending?',
-    'How long is the NBA court?'
-  ];
+  const handleClearChat = () => {
+    if (window.confirm('Are you sure you want to clear the chat history?')) {
+      clearChat();
+    }
+  };
   
   return (
-    <Box sx={{ 
-      display: 'flex', 
-      flexDirection: 'column', 
-      height: '100%' 
-    }}>
-      {/* Chat messages container */}
-      <Paper 
-        elevation={0} 
-        sx={{
+    <Paper 
+      elevation={2} 
+      sx={{ 
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        width: '100%',
+        overflow: 'hidden',
+        borderRadius: 2
+      }}
+    >
+      {/* Chat header */}
+      <Box sx={{ p: 2, borderBottom: '1px solid', borderColor: 'divider' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Typography variant="h6">
+            NBA RuleBook Assistant
+          </Typography>
+          
+          <Button 
+            size="small"
+            color="error"
+            variant="outlined"
+            startIcon={<DeleteIcon />}
+            onClick={handleClearChat}
+            disabled={messages.length === 0}
+          >
+            Clear Chat
+          </Button>
+        </Box>
+      </Box>
+      
+      {/* Messages container */}
+      <Box 
+        sx={{ 
           flexGrow: 1,
-          mb: 2,
+          overflowY: 'auto',
           p: 2,
-          overflow: 'auto',
-          bgcolor: '#f5f7f9',
-          borderRadius: 2,
           display: 'flex',
-          flexDirection: 'column'
+          flexDirection: 'column',
+          bgcolor: 'grey.50'
         }}
       >
-        {/* Welcome message when no messages */}
-        {messages.length === 0 && (
+        {messages.length === 0 ? (
           <Box 
-            sx={{
-              display: 'flex',
+            sx={{ 
+              height: '100%', 
+              display: 'flex', 
               flexDirection: 'column',
+              justifyContent: 'center', 
               alignItems: 'center',
-              justifyContent: 'center',
-              height: '100%',
-              textAlign: 'center'
+              textAlign: 'center',
+              p: 3,
+              opacity: 0.7
             }}
           >
-            <SportsBasketballIcon 
-              sx={{ 
-                fontSize: 80, 
-                color: 'primary.main',
-                mb: 2,
-                animation: 'bounce 2s infinite'
-              }} 
-            />
-            <Typography variant="h5" sx={{ mb: 2, fontWeight: 600 }}>
-              NBA RuleBook Bot
+            <Typography variant="h6" gutterBottom>
+              Welcome to RuleBook Bot!
             </Typography>
-            <Typography variant="body1" color="text.secondary" sx={{ mb: 3, maxWidth: '600px' }}>
-              Ask me any question about NBA rules! I'll provide answers based on the official NBA rulebook
-              with citations so you can reference the exact rule.
+            <Typography variant="body1">
+              Ask me anything about NBA rules, violations, court dimensions, timing, or scoring.
             </Typography>
-            
-            <Typography variant="subtitle2" sx={{ mb: 1 }}>
-              Try asking:
-            </Typography>
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 1 }}>
-              {suggestedQuestions.map((question, index) => (
-                <Button 
-                  key={index}
-                  variant="outlined" 
-                  size="small"
-                  onClick={() => {
-                    setInputValue(question);
-                  }}
-                >
-                  {question}
-                </Button>
-              ))}
-            </Box>
           </Box>
-        )}
-        
-        {/* Render messages */}
-        {messages.map((message) => (
-          <MessageBubble key={message.id} message={message} />
-        ))}
-        
-        {/* Loading indicator */}
-        {loading && (
-          <Box sx={{ display: 'flex', justifyContent: 'center', my: 2 }}>
-            <CircularProgress size={30} />
-          </Box>
+        ) : (
+          messages.map((message) => (
+            <MessageBubble key={message.id} message={message} />
+          ))
         )}
         
         {/* Invisible element to scroll to */}
-        <div ref={messagesEndRef} />
-      </Paper>
+        <div ref={endOfMessagesRef} />
+      </Box>
       
       {/* Input area */}
-      <Paper 
-        elevation={2} 
+      <Box 
         sx={{ 
           p: 2, 
-          borderRadius: 2, 
-          display: 'flex', 
-          alignItems: 'center', 
-          position: 'relative'
+          borderTop: '1px solid', 
+          borderColor: 'divider',
+          bgcolor: 'background.paper'
         }}
       >
-        {messages.length > 0 && (
-          <Tooltip title="Clear conversation">
-            <IconButton 
-              color="error" 
-              sx={{ mr: 1 }}
-              onClick={() => {
-                if (window.confirm('Are you sure you want to clear the conversation?')) {
-                  clearChat();
-                }
-              }}
-            >
-              <DeleteIcon />
-            </IconButton>
-          </Tooltip>
-        )}
-        
-        <TextField 
-          fullWidth
-          multiline
-          maxRows={4}
-          placeholder="Ask about NBA rules..."
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          onKeyPress={handleKeyPress}
-          variant="outlined"
+        <Box 
           sx={{ 
-            '& .MuiOutlinedInput-root': {
-              borderRadius: 2
-            }
+            display: 'flex', 
+            alignItems: 'center' 
           }}
-        />
-        
-        <Button
-          variant="contained"
-          color="primary"
-          endIcon={<SendIcon />}
-          onClick={handleSendMessage}
-          disabled={loading || inputValue.trim() === ''}
-          sx={{ ml: 2, height: 54, px: 3 }}
         >
-          Send
-        </Button>
-      </Paper>
-    </Box>
+          <TextField
+            fullWidth
+            variant="outlined"
+            placeholder="Ask about NBA rules..."
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyPress={handleKeyPress}
+            disabled={loading}
+            multiline
+            maxRows={4}
+            sx={{ 
+              '& .MuiOutlinedInput-root': {
+                borderRadius: 2,
+              }
+            }}
+          />
+          
+          <IconButton 
+            color="primary" 
+            onClick={handleSendMessage} 
+            disabled={!input.trim() || loading}
+            sx={{ ml: 1, p: 1.5 }}
+          >
+            {loading ? <CircularProgress size={24} /> : <SendIcon />}
+          </IconButton>
+        </Box>
+        
+        <Typography 
+          variant="caption" 
+          color="text.secondary"
+          sx={{ mt: 1, display: 'block', textAlign: 'center' }}
+        >
+          Ask questions like "What is a traveling violation?" or "How does the shot clock work?"
+        </Typography>
+      </Box>
+    </Paper>
   );
 };
 
