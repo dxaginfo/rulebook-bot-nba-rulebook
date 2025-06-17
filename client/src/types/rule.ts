@@ -1,23 +1,19 @@
 /**
- * Type definitions for NBA rulebook rules
- */
-
-/**
- * Represents a rule section or subsection
+ * Interface for NBA rule data
  */
 export interface Rule {
   /**
-   * Unique identifier for the rule
+   * Unique identifier for the rule (e.g., "1-A-1")
    */
   id: string;
   
   /**
-   * Rule title
+   * Rule title or heading
    */
   title: string;
   
   /**
-   * Rule content text
+   * Full text content of the rule
    */
   content: string;
   
@@ -25,10 +21,25 @@ export interface Rule {
    * Optional parent rule ID for subsections
    */
   parentId?: string;
+  
+  /**
+   * Order in the rulebook (for sorting)
+   */
+  order?: number;
+  
+  /**
+   * Category or section name
+   */
+  category?: string;
+  
+  /**
+   * References to other related rules
+   */
+  relatedRules?: string[];
 }
 
 /**
- * Represents an example of a rule application
+ * Interface for rule example data
  */
 export interface RuleExample {
   /**
