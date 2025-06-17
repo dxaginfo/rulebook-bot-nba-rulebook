@@ -1,109 +1,148 @@
-import React from 'react';
-import { 
-  AppBar, 
-  Toolbar, 
-  Typography, 
-  Box, 
-  IconButton, 
-  Menu, 
-  MenuItem, 
-  Tooltip 
+import React, { useState } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  Box,
+  IconButton,
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+  useMediaQuery,
+  useTheme,
+  Container
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import SportsBasketballIcon from '@mui/icons-material/SportsBasketball';
 import GitHubIcon from '@mui/icons-material/GitHub';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import nbaLogo from '../assets/nba-logo.svg';
 
-/**
- * Application header component
- */
 const Header: React.FC = () => {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   
-  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
+  const toggleDrawer = (open: boolean) => (
+    event: React.KeyboardEvent | React.MouseEvent
+  ) => {
+    if (
+      event.type === 'keydown' &&
+      ((event as React.KeyboardEvent).key === 'Tab' ||
+        (event as React.KeyboardEvent).key === 'Shift')
+    ) {
+      return;
+    }
+    setDrawerOpen(open);
   };
   
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
+  const navItems = [
+    { text: 'Home', path: '/' },
+    { text: 'About', path: '/about' },
+    { text: 'GitHub', path: 'https://github.com/dxaginfo/rulebook-bot-nba-rulebook', external: true }
+  ];
+  
+  const NavDrawer = () => (
+    <Box
+      sx={{ width: 250 }}
+      role="presentation"
+      onClick={toggleDrawer(false)}
+      onKeyDown={toggleDrawer(false)}
+    >
+      <List>
+        {navItems.map((item) => (
+          <ListItem 
+            button 
+            key={item.text}
+            component={item.external ? 'a' : RouterLink}
+            to={!item.external ? item.path : undefined}
+            href={item.external ? item.path : undefined}
+            target={item.external ? '_blank' : undefined}
+            rel={item.external ? 'noopener noreferrer' : undefined}
+          >
+            <ListItemText primary={item.text} />
+          </ListItem>
+        ))}
+      </List>
+    </Box>
+  );
   
   return (
-    <AppBar position="static" sx={{ boxShadow: 2 }}>
-      <Toolbar>
-        {/* Logo and title */}
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <img 
-            src={nbaLogo} 
-            alt="NBA Logo" 
-            style={{ height: 40, marginRight: 12 }}
-          />
-          <Typography 
-            variant="h6" 
-            noWrap 
-            component="div"
-            sx={{ mr: 2, display: { xs: 'none', sm: 'block' } }}
+    <AppBar position="static" color="primary" elevation={0}>
+      <Container maxWidth="lg">
+        <Toolbar sx={{ py: 1 }}>
+          {/* Logo */}
+          <Box 
+            component={RouterLink} 
+            to="/"
+            sx={{ 
+              display: 'flex', 
+              alignItems: 'center',
+              textDecoration: 'none',
+              color: 'inherit'
+            }}
           >
-            RuleBook Bot
-          </Typography>
-        </Box>
-        
-        <Box sx={{ flexGrow: 1 }} />
-        
-        {/* Action icons */}
-        <Box sx={{ display: 'flex' }}>
-          <Tooltip title="About">
-            <IconButton color="inherit">
-              <InfoOutlinedIcon />
-            </IconButton>
-          </Tooltip>
+            <SportsBasketballIcon sx={{ mr: 1, fontSize: 32 }} />
+            <Typography variant="h6" component="div" sx={{ fontWeight: 700 }}>
+              RuleBook Bot
+            </Typography>
+          </Box>
           
-          <Tooltip title="View on GitHub">
-            <IconButton 
-              color="inherit"
-              href="https://github.com/dxaginfo/rulebook-bot-nba-rulebook"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <GitHubIcon />
-            </IconButton>
-          </Tooltip>
+          {/* Desktop Navigation */}
+          {!isMobile && (
+            <Box sx={{ display: 'flex', ml: 'auto' }}>
+              {navItems.map((item) => (
+                item.external ? (
+                  <Button 
+                    key={item.text}
+                    color="inherit"
+                    href={item.path}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    startIcon={item.text === 'GitHub' ? <GitHubIcon /> : undefined}
+                    sx={{ ml: 2 }}
+                  >
+                    {item.text}
+                  </Button>
+                ) : (
+                  <Button 
+                    key={item.text}
+                    color="inherit"
+                    component={RouterLink}
+                    to={item.path}
+                    sx={{ ml: 2 }}
+                  >
+                    {item.text}
+                  </Button>
+                )
+              ))}
+            </Box>
+          )}
           
-          <Tooltip title="Help">
-            <IconButton 
+          {/* Mobile Navigation */}
+          {isMobile && (
+            <IconButton
               color="inherit"
-              aria-label="help"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleMenuOpen}
+              aria-label="open drawer"
+              edge="end"
+              onClick={toggleDrawer(true)}
+              sx={{ ml: 'auto' }}
             >
-              <HelpOutlineIcon />
+              <MenuIcon />
             </IconButton>
-          </Tooltip>
-        </Box>
-        
-        {/* Help menu */}
-        <Menu
-          id="menu-appbar"
-          anchorEl={anchorEl}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'right',
-          }}
-          keepMounted
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'right',
-          }}
-          open={Boolean(anchorEl)}
-          onClose={handleMenuClose}
-        >
-          <MenuItem onClick={handleMenuClose}>How to Use</MenuItem>
-          <MenuItem onClick={handleMenuClose}>Example Questions</MenuItem>
-          <MenuItem onClick={handleMenuClose}>Report an Issue</MenuItem>
-        </Menu>
-      </Toolbar>
+          )}
+        </Toolbar>
+      </Container>
+      
+      {/* Mobile Drawer */}
+      <Drawer
+        anchor="right"
+        open={drawerOpen}
+        onClose={toggleDrawer(false)}
+      >
+        <NavDrawer />
+      </Drawer>
     </AppBar>
   );
 };
