@@ -1,46 +1,66 @@
 import React from 'react';
-import { Box, Typography, Button, Container } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
-import SportsBasketballIcon from '@mui/icons-material/SportsBasketball';
+import {
+  Container,
+  Typography,
+  Box,
+  Button,
+  Paper,
+  Grid
+} from '@mui/material';
+import SportsTwoToneIcon from '@mui/icons-material/SportsTwoTone';
+import HomeIcon from '@mui/icons-material/Home';
 
 const NotFoundPage: React.FC = () => {
   return (
     <Container maxWidth="md">
-      <Box 
-        sx={{ 
-          display: 'flex', 
-          flexDirection: 'column', 
-          alignItems: 'center', 
-          justifyContent: 'center',
-          minHeight: '60vh',
-          textAlign: 'center',
-          py: 8
-        }}
+      <Grid 
+        container 
+        spacing={3} 
+        justifyContent="center" 
+        alignItems="center"
+        sx={{ minHeight: '60vh' }}
       >
-        <SportsBasketballIcon sx={{ fontSize: 100, color: 'primary.main', mb: 3 }} />
-        
-        <Typography variant="h2" component="h1" gutterBottom fontWeight="bold">
-          404
-        </Typography>
-        
-        <Typography variant="h5" component="h2" gutterBottom>
-          Out of Bounds!
-        </Typography>
-        
-        <Typography variant="body1" color="text.secondary" paragraph sx={{ maxWidth: 500 }}>
-          Looks like you've stepped out of bounds. The page you're looking for doesn't exist or has been moved.
-        </Typography>
-        
-        <Button 
-          variant="contained" 
-          component={RouterLink} 
-          to="/"
-          size="large"
-          sx={{ mt: 3 }}
-        >
-          Back to Home Court
-        </Button>
-      </Box>
+        <Grid item xs={12} md={8}>
+          <Paper 
+            elevation={0} 
+            sx={{ 
+              p: 4, 
+              borderRadius: 2, 
+              border: '1px solid', 
+              borderColor: 'divider',
+              textAlign: 'center'
+            }}
+          >
+            <SportsTwoToneIcon sx={{ fontSize: 80, color: 'primary.main', mb: 2 }} />
+            
+            <Typography variant="h3" gutterBottom>
+              404
+            </Typography>
+            
+            <Typography variant="h5" gutterBottom>
+              Page Not Found
+            </Typography>
+            
+            <Typography variant="body1" color="text.secondary" paragraph sx={{ mt: 2 }}>
+              Oops! Looks like you're out of bounds. The page you're looking for doesn't exist or has been moved.
+            </Typography>
+            
+            <Box sx={{ mt: 4 }}>
+              <Button
+                variant="contained"
+                color="primary"
+                size="large"
+                startIcon={<HomeIcon />}
+                component={RouterLink}
+                to="/"
+              >
+                Return to Home Court
+              </Button>
+            </Box>
+          </Paper>
+        </Grid>
+      </Grid>
     </Container>
   );
 };
