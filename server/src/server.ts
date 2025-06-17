@@ -4,6 +4,9 @@ import path from 'path';
 import chatRoutes from './routes/chatRoutes';
 import ruleRoutes from './routes/ruleRoutes';
 
+// Load environment variables
+require('dotenv').config();
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -25,6 +28,7 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
+// Start server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
