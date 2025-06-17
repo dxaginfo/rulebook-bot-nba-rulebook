@@ -1,33 +1,47 @@
 import React from 'react';
-import { Box, Typography, Paper, Button } from '@mui/material';
+import { Box, Typography, Button, Container } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import SportsBasketballIcon from '@mui/icons-material/SportsBasketball';
 
 const NotFoundPage: React.FC = () => {
   return (
-    <Box sx={{ textAlign: 'center', py: 4 }}>
-      <Paper elevation={1} sx={{ p: 4, maxWidth: 600, mx: 'auto', borderRadius: 2 }}>
-        <SportsBasketballIcon sx={{ fontSize: 80, color: 'primary.main', mb: 2 }} />
+    <Container maxWidth="md">
+      <Box 
+        sx={{ 
+          display: 'flex', 
+          flexDirection: 'column', 
+          alignItems: 'center', 
+          justifyContent: 'center',
+          minHeight: '60vh',
+          textAlign: 'center',
+          py: 8
+        }}
+      >
+        <SportsBasketballIcon sx={{ fontSize: 100, color: 'primary.main', mb: 3 }} />
         
-        <Typography variant="h4" gutterBottom sx={{ fontWeight: 700, color: 'primary.main' }}>
-          404 - Page Out of Bounds
+        <Typography variant="h2" component="h1" gutterBottom fontWeight="bold">
+          404
         </Typography>
         
-        <Typography variant="body1" paragraph color="text.secondary">
-          The page you're looking for has stepped out of bounds and is not available.
+        <Typography variant="h5" component="h2" gutterBottom>
+          Out of Bounds!
+        </Typography>
+        
+        <Typography variant="body1" color="text.secondary" paragraph sx={{ maxWidth: 500 }}>
+          Looks like you've stepped out of bounds. The page you're looking for doesn't exist or has been moved.
         </Typography>
         
         <Button 
           variant="contained" 
-          color="primary" 
           component={RouterLink} 
           to="/"
-          sx={{ mt: 2 }}
+          size="large"
+          sx={{ mt: 3 }}
         >
-          Return to Home Court
+          Back to Home Court
         </Button>
-      </Paper>
-    </Box>
+      </Box>
+    </Container>
   );
 };
 

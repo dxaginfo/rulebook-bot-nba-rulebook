@@ -1,134 +1,183 @@
 import React from 'react';
-import { Box, Typography, Paper, Grid, Divider, Card, CardContent, CardMedia, Avatar } from '@mui/material';
-import CodeIcon from '@mui/icons-material/Code';
-import AutoGraphIcon from '@mui/icons-material/AutoGraph';
-import SportsBasketballIcon from '@mui/icons-material/SportsBasketball';
-import SchoolIcon from '@mui/icons-material/School';
+import { Container, Typography, Box, Paper, Grid, Divider, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
+import ChatIcon from '@mui/icons-material/Chat';
+import SearchIcon from '@mui/icons-material/Search';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
+import LocalLibraryIcon from '@mui/icons-material/LocalLibrary';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
 const AboutPage: React.FC = () => {
   return (
-    <Box sx={{ mb: 4 }}>
+    <Container maxWidth="lg">
       <Box sx={{ mb: 4, textAlign: 'center' }}>
-        <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 700, color: 'primary.main' }}>
+        <Typography variant="h4" component="h1" gutterBottom fontWeight="bold">
           About RuleBook Bot
         </Typography>
-        <Typography variant="subtitle1" color="text.secondary" sx={{ maxWidth: 800, mx: 'auto' }}>
-          Your AI assistant for NBA basketball rules and regulations
+        <Typography variant="subtitle1" color="text.secondary">
+          Your AI assistant for NBA rules and regulations
         </Typography>
       </Box>
       
-      <Paper elevation={1} sx={{ p: 4, mb: 4, borderRadius: 2 }}>
-        <Typography variant="h5" gutterBottom sx={{ fontWeight: 600 }}>
-          Our Mission
-        </Typography>
-        <Typography paragraph>
-          RuleBook Bot was created to make the complex NBA rulebook more accessible to basketball fans, players, coaches, and officials. Our AI-powered assistant breaks down the rules into easy-to-understand explanations and provides quick answers to your basketball rule questions.
-        </Typography>
-        <Typography paragraph>
-          Whether you're a casual fan wondering about a call you saw during a game, a player looking to understand the nuances of the rules, or a referee studying the regulations, RuleBook Bot is designed to help you navigate the official NBA rulebook with ease.
-        </Typography>
-        
-        <Divider sx={{ my: 4 }} />
-        
-        <Typography variant="h5" gutterBottom sx={{ fontWeight: 600 }}>
-          Key Features
-        </Typography>
-        
-        <Grid container spacing={3} sx={{ mt: 2 }}>
-          <Grid item xs={12} sm={6}>
-            <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-              <Box sx={{ display: 'flex', p: 2, bgcolor: 'primary.main' }}>
-                <Avatar sx={{ bgcolor: '#fff', color: 'primary.main' }}>
-                  <SportsBasketballIcon />
-                </Avatar>
-                <Box sx={{ ml: 2, color: '#fff' }}>
-                  <Typography variant="h6">
-                    Comprehensive Rule Coverage
-                  </Typography>
-                </Box>
-              </Box>
-              <CardContent>
-                <Typography variant="body2" color="text.secondary">
-                  RuleBook Bot covers all aspects of the NBA rulebook including violations, fouls, timing, scoring, and court dimensions. Our database includes official rule definitions, examples, and interpretations.
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-          
-          <Grid item xs={12} sm={6}>
-            <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-              <Box sx={{ display: 'flex', p: 2, bgcolor: 'secondary.main' }}>
-                <Avatar sx={{ bgcolor: '#fff', color: 'secondary.main' }}>
-                  <AutoGraphIcon />
-                </Avatar>
-                <Box sx={{ ml: 2, color: '#fff' }}>
-                  <Typography variant="h6">
-                    Natural Language Interface
-                  </Typography>
-                </Box>
-              </Box>
-              <CardContent>
-                <Typography variant="body2" color="text.secondary">
-                  Ask questions in plain English and get clear, relevant answers. Our AI understands basketball terminology and can interpret your questions to provide the most helpful responses about NBA rules.
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-          
-          <Grid item xs={12} sm={6}>
-            <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-              <Box sx={{ display: 'flex', p: 2, bgcolor: 'success.main' }}>
-                <Avatar sx={{ bgcolor: '#fff', color: 'success.main' }}>
-                  <SchoolIcon />
-                </Avatar>
-                <Box sx={{ ml: 2, color: '#fff' }}>
-                  <Typography variant="h6">
-                    Educational Resources
-                  </Typography>
-                </Box>
-              </Box>
-              <CardContent>
-                <Typography variant="body2" color="text.secondary">
-                  Beyond just answering questions, RuleBook Bot provides explanations and examples to help you understand the reasoning behind the rules and how they're applied in game situations.
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-          
-          <Grid item xs={12} sm={6}>
-            <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-              <Box sx={{ display: 'flex', p: 2, bgcolor: 'info.main' }}>
-                <Avatar sx={{ bgcolor: '#fff', color: 'info.main' }}>
-                  <CodeIcon />
-                </Avatar>
-                <Box sx={{ ml: 2, color: '#fff' }}>
-                  <Typography variant="h6">
-                    Rule Browser
-                  </Typography>
-                </Box>
-              </Box>
-              <CardContent>
-                <Typography variant="body2" color="text.secondary">
-                  In addition to the chat interface, you can browse the rulebook by category, search for specific terms, and explore related rules to deepen your understanding of basketball regulations.
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
+      <Grid container spacing={4}>
+        <Grid item xs={12} md={8}>
+          <Paper elevation={0} sx={{ p: 4, borderRadius: 2, border: '1px solid', borderColor: 'divider' }}>
+            <Typography variant="h5" gutterBottom>
+              About This Project
+            </Typography>
+            
+            <Typography variant="body1" paragraph>
+              RuleBook Bot is an educational tool designed to help basketball fans, players, and coaches better understand the official NBA rules. 
+              Using conversational AI, it provides easy access to rule explanations, interpretations, and examples from the NBA rulebook.
+            </Typography>
+            
+            <Typography variant="body1" paragraph>
+              Whether you're watching a game and need clarification on a call, studying the rulebook as a player or coach, or just curious about
+              specific regulations, RuleBook Bot aims to make the complex NBA rulebook more accessible and understandable.
+            </Typography>
+            
+            <Divider sx={{ my: 3 }} />
+            
+            <Typography variant="h5" gutterBottom>
+              Features
+            </Typography>
+            
+            <List>
+              <ListItem>
+                <ListItemIcon>
+                  <ChatIcon color="primary" />
+                </ListItemIcon>
+                <ListItemText 
+                  primary="AI-Powered Rule Assistant" 
+                  secondary="Ask questions about NBA rules in natural language and get clear, concise answers"
+                />
+              </ListItem>
+              
+              <ListItem>
+                <ListItemIcon>
+                  <SearchIcon color="primary" />
+                </ListItemIcon>
+                <ListItemText 
+                  primary="Comprehensive Rule Search" 
+                  secondary="Search through the entire NBA rulebook for specific terms, violations, or procedures"
+                />
+              </ListItem>
+              
+              <ListItem>
+                <ListItemIcon>
+                  <MenuBookIcon color="primary" />
+                </ListItemIcon>
+                <ListItemText 
+                  primary="Structured Rule Browser" 
+                  secondary="Browse rules by category for easy navigation"
+                />
+              </ListItem>
+              
+              <ListItem>
+                <ListItemIcon>
+                  <LocalLibraryIcon color="primary" />
+                </ListItemIcon>
+                <ListItemText 
+                  primary="Practical Examples" 
+                  secondary="Learn through real-world examples of rule applications"
+                />
+              </ListItem>
+            </List>
+            
+            <Divider sx={{ my: 3 }} />
+            
+            <Typography variant="h5" gutterBottom>
+              Disclaimer
+            </Typography>
+            
+            <Typography variant="body1" paragraph>
+              RuleBook Bot is an unofficial educational tool and is not affiliated with or endorsed by the National Basketball Association (NBA). 
+              The information provided is intended for educational purposes only.
+            </Typography>
+            
+            <Typography variant="body1" paragraph>
+              For official rules and interpretations, please refer to the official NBA rulebook and other NBA publications. This application 
+              should not be used for making official rule determinations in professional basketball games.
+            </Typography>
+          </Paper>
         </Grid>
         
-        <Divider sx={{ my: 4 }} />
-        
-        <Typography variant="h5" gutterBottom sx={{ fontWeight: 600 }}>
-          Disclaimer
-        </Typography>
-        <Typography paragraph color="text.secondary">
-          RuleBook Bot is an unofficial educational tool and is not affiliated with or endorsed by the National Basketball Association (NBA). While we strive for accuracy, the official NBA rulebook should be considered the definitive source for official rules and interpretations.
-        </Typography>
-        <Typography paragraph color="text.secondary">
-          For official rule information, please visit the <a href="https://official.nba.com/rulebook/" target="_blank" rel="noopener noreferrer">NBA Official Rulebook website</a>.
-        </Typography>
-      </Paper>
-    </Box>
+        <Grid item xs={12} md={4}>
+          <Paper elevation={0} sx={{ p: 4, borderRadius: 2, border: '1px solid', borderColor: 'divider', mb: 4 }}>
+            <Typography variant="h6" gutterBottom>
+              How to Use
+            </Typography>
+            
+            <List>
+              <ListItem>
+                <ListItemIcon>
+                  <CheckCircleOutlineIcon color="success" />
+                </ListItemIcon>
+                <ListItemText primary="Ask questions in the chat interface" />
+              </ListItem>
+              
+              <ListItem>
+                <ListItemIcon>
+                  <CheckCircleOutlineIcon color="success" />
+                </ListItemIcon>
+                <ListItemText primary="Browse rules by category" />
+              </ListItem>
+              
+              <ListItem>
+                <ListItemIcon>
+                  <CheckCircleOutlineIcon color="success" />
+                </ListItemIcon>
+                <ListItemText primary="Search for specific terms" />
+              </ListItem>
+              
+              <ListItem>
+                <ListItemIcon>
+                  <CheckCircleOutlineIcon color="success" />
+                </ListItemIcon>
+                <ListItemText primary="Click on citations to view detailed rules" />
+              </ListItem>
+            </List>
+          </Paper>
+          
+          <Paper elevation={0} sx={{ p: 4, borderRadius: 2, border: '1px solid', borderColor: 'divider' }}>
+            <Typography variant="h6" gutterBottom>
+              Resources
+            </Typography>
+            
+            <List>
+              <ListItem>
+                <ListItemIcon>
+                  <MenuBookIcon color="primary" />
+                </ListItemIcon>
+                <ListItemText 
+                  primary="Official NBA Rulebook" 
+                  secondary={<a href="https://official.nba.com/rulebook/" target="_blank" rel="noopener noreferrer">official.nba.com/rulebook</a>}
+                />
+              </ListItem>
+              
+              <ListItem>
+                <ListItemIcon>
+                  <MenuBookIcon color="primary" />
+                </ListItemIcon>
+                <ListItemText 
+                  primary="NBA Video Rulebook" 
+                  secondary={<a href="https://videorulebook.nba.com/" target="_blank" rel="noopener noreferrer">videorulebook.nba.com</a>}
+                />
+              </ListItem>
+              
+              <ListItem>
+                <ListItemIcon>
+                  <MenuBookIcon color="primary" />
+                </ListItemIcon>
+                <ListItemText 
+                  primary="Official Rules Interpretations" 
+                  secondary={<a href="https://official.nba.com/rule-interpretations/" target="_blank" rel="noopener noreferrer">official.nba.com/rule-interpretations</a>}
+                />
+              </ListItem>
+            </List>
+          </Paper>
+        </Grid>
+      </Grid>
+    </Container>
   );
 };
 
