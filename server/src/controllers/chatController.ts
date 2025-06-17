@@ -1,18 +1,15 @@
 import { Request, Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
-import { Message, ChatResponse } from '../types/chat';
-import ruleService from '../services/ruleService';
 import aiService from '../services/aiService';
+import { Message } from '../types/chat';
 
-// In-memory store for chat history (would use a database in production)
-let chatHistory: Message[] = [];
+// In-memory chat history storage (for demo purposes)
+// In production, this would be stored in a database
+const chatHistory: Message[] = [];
 
-/**
- * Chat controller for handling chat-related requests
- */
 const chatController = {
   /**
-   * Send a message to the chatbot and get a response
+   * Send a message to the chatbot
    */
   sendMessage: async (req: Request, res: Response) => {
     try {
@@ -32,7 +29,7 @@ const chatController = {
       
       chatHistory.push(userMessage);
       
-      // Generate bot response
+      // Generate AI response
       const response = await aiService.generateResponse(content, chatHistory);
       
       // Add bot message to history
@@ -46,23 +43,22 @@ const chatController = {
       
       chatHistory.push(botMessage);
       
-      // Return response
       return res.status(200).json(response);
     } catch (error) {
       console.error('Error sending message:', error);
-      return res.status(500).json({ message: 'Failed to process message' });
+      return res.status(500).json({ message: 'Failed to send message' });
     }
   },
   
   /**
    * Get chat history
    */
-  getChatHistory: (req: Request, res: Response) => {
+  getChatHistory: async (req: Request, res: Response) => {
     try {
-      const limit = Number(req.query.limit) || 50;
-      const messages = chatHistory.slice(-limit);
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : 50;
+      const limitedHistory = chatHistory.slice(-limit);
       
-      return res.status(200).json({ messages });
+      return res.status(200).json({ messages: limitedHistory });
     } catch (error) {
       console.error('Error getting chat history:', error);
       return res.status(500).json({ message: 'Failed to get chat history' });
@@ -72,9 +68,11 @@ const chatController = {
   /**
    * Clear chat history
    */
-  clearChatHistory: (req: Request, res: Response) => {
+  clearChatHistory: async (req: Request, res: Response) => {
     try {
-      chatHistory = [];
+      // Clear the chat history array
+      chatHistory.length = 0;
+      
       return res.status(200).json({ message: 'Chat history cleared' });
     } catch (error) {
       console.error('Error clearing chat history:', error);
