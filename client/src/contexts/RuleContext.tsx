@@ -1,62 +1,92 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { Rule } from '../types/rule';
-import ruleService from '../services/ruleService';
+import axios from 'axios';
 
-interface RuleContextType {
+interface RuleContextProps {
   rules: Rule[];
-  loadingRules: boolean;
-  loadingRule: boolean;
-  searchResults: Rule[];
-  loadingSearch: boolean;
-  getRuleById: (id: string) => Promise<Rule>;
-  searchRules: (query: string) => Promise<void>;
+  categories: string[];
+  loading: boolean;
+  searchRules: (query: string) => Promise<Rule[]>;
+  getRuleById: (id: string) => Promise<Rule | null>;
+  getRulesByCategory: (category: string) => Promise<Rule[]>;
 }
 
-const RuleContext = createContext<RuleContextType | undefined>(undefined);
+const RuleContext = createContext<RuleContextProps>({
+  rules: [],
+  categories: [],
+  loading: false,
+  searchRules: async () => [],
+  getRuleById: async () => null,
+  getRulesByCategory: async () => []
+});
 
 interface RuleProviderProps {
   children: ReactNode;
 }
 
-/**
- * Provider component for rule functionality
- */
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
 export const RuleProvider: React.FC<RuleProviderProps> = ({ children }) => {
   const [rules, setRules] = useState<Rule[]>([]);
-  const [loadingRules, setLoadingRules] = useState(false);
-  const [loadingRule, setLoadingRule] = useState(false);
-  const [searchResults, setSearchResults] = useState<Rule[]>([]);
-  const [loadingSearch, setLoadingSearch] = useState(false);
+  const [categories, setCategories] = useState<string[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
   
-  /**
-   * Get a rule by ID
-   */
-  const getRuleById = async (id: string): Promise<Rule> => {
+  // Load categories when component mounts
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/api/rules/categories`);
+        setCategories(response.data.categories);
+      } catch (error) {
+        console.error('Failed to load categories:', error);
+      }
+    };
+    
+    loadCategories();
+  }, []);
+  
+  const searchRules = async (query: string): Promise<Rule[]> => {
     try {
-      setLoadingRule(true);
-      const rule = await ruleService.getRuleById(id);
-      return rule;
+      setLoading(true);
+      const response = await axios.get(`${API_URL}/api/rules/search`, {
+        params: { q: query }
+      });
+      const foundRules = response.data.results;
+      setRules(foundRules);
+      return foundRules;
     } catch (error) {
-      console.error(`Failed to get rule with ID ${id}:`, error);
-      throw error;
+      console.error('Error searching rules:', error);
+      return [];
     } finally {
-      setLoadingRule(false);
+      setLoading(false);
     }
   };
   
-  /**
-   * Search for rules by query
-   */
-  const searchRules = async (query: string) => {
+  const getRuleById = async (id: string): Promise<Rule | null> => {
     try {
-      setLoadingSearch(true);
-      const results = await ruleService.searchRules(query);
-      setSearchResults(results);
+      setLoading(true);
+      const response = await axios.get(`${API_URL}/api/rules/${id}`);
+      return response.data;
     } catch (error) {
-      console.error('Failed to search rules:', error);
-      setSearchResults([]);
+      console.error('Error getting rule:', error);
+      return null;
     } finally {
-      setLoadingSearch(false);
+      setLoading(false);
+    }
+  };
+  
+  const getRulesByCategory = async (category: string): Promise<Rule[]> => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`${API_URL}/api/rules/category/${category}`);
+      const categoryRules = response.data.rules;
+      setRules(categoryRules);
+      return categoryRules;
+    } catch (error) {
+      console.error('Error getting rules by category:', error);
+      return [];
+    } finally {
+      setLoading(false);
     }
   };
   
@@ -64,12 +94,11 @@ export const RuleProvider: React.FC<RuleProviderProps> = ({ children }) => {
     <RuleContext.Provider 
       value={{
         rules,
-        loadingRules,
-        loadingRule,
-        searchResults,
-        loadingSearch,
+        categories,
+        loading,
+        searchRules,
         getRuleById,
-        searchRules
+        getRulesByCategory
       }}
     >
       {children}
@@ -77,15 +106,4 @@ export const RuleProvider: React.FC<RuleProviderProps> = ({ children }) => {
   );
 };
 
-/**
- * Hook to use the rule context
- */
-export const useRules = (): RuleContextType => {
-  const context = useContext(RuleContext);
-  
-  if (context === undefined) {
-    throw new Error('useRules must be used within a RuleProvider');
-  }
-  
-  return context;
-};
+export const useRule = () => useContext(RuleContext);
