@@ -1,22 +1,24 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { Rule } from '../types/rule';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 import axios from 'axios';
+import { Rule } from '../types/rule';
+
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 interface RuleContextProps {
-  rules: Rule[];
-  categories: string[];
   loading: boolean;
-  searchRules: (query: string) => Promise<Rule[]>;
+  error: string | null;
   getRuleById: (id: string) => Promise<Rule | null>;
+  searchRules: (query: string) => Promise<Rule[]>;
+  getCategories: () => Promise<string[]>;
   getRulesByCategory: (category: string) => Promise<Rule[]>;
 }
 
 const RuleContext = createContext<RuleContextProps>({
-  rules: [],
-  categories: [],
   loading: false,
-  searchRules: async () => [],
+  error: null,
   getRuleById: async () => null,
+  searchRules: async () => [],
+  getCategories: async () => [],
   getRulesByCategory: async () => []
 });
 
@@ -24,52 +26,55 @@ interface RuleProviderProps {
   children: ReactNode;
 }
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
-
 export const RuleProvider: React.FC<RuleProviderProps> = ({ children }) => {
-  const [rules, setRules] = useState<Rule[]>([]);
-  const [categories, setCategories] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
   
-  // Load categories when component mounts
-  useEffect(() => {
-    const loadCategories = async () => {
-      try {
-        const response = await axios.get(`${API_URL}/api/rules/categories`);
-        setCategories(response.data.categories);
-      } catch (error) {
-        console.error('Failed to load categories:', error);
-      }
-    };
-    
-    loadCategories();
-  }, []);
+  const getRuleById = async (id: string): Promise<Rule | null> => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const response = await axios.get(`${API_URL}/api/rules/${id}`);
+      return response.data;
+    } catch (err) {
+      setError('Failed to fetch rule');
+      console.error('Error fetching rule:', err);
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  };
   
   const searchRules = async (query: string): Promise<Rule[]> => {
     try {
       setLoading(true);
+      setError(null);
+      
       const response = await axios.get(`${API_URL}/api/rules/search`, {
         params: { q: query }
       });
-      const foundRules = response.data.results;
-      setRules(foundRules);
-      return foundRules;
-    } catch (error) {
-      console.error('Error searching rules:', error);
+      return response.data.results;
+    } catch (err) {
+      setError('Failed to search rules');
+      console.error('Error searching rules:', err);
       return [];
     } finally {
       setLoading(false);
     }
   };
   
-  const getRuleById = async (id: string): Promise<Rule | null> => {
+  const getCategories = async (): Promise<string[]> => {
     try {
       setLoading(true);
-      const response = await axios.get(`${API_URL}/api/rules/${id}`);
-      return response.data;
-    } catch (error) {
-      console.error('Error getting rule:', error);
-      return null;
+      setError(null);
+      
+      const response = await axios.get(`${API_URL}/api/rules/categories`);
+      return response.data.categories;
+    } catch (err) {
+      setError('Failed to fetch categories');
+      console.error('Error fetching categories:', err);
+      return [];
     } finally {
       setLoading(false);
     }
@@ -78,12 +83,13 @@ export const RuleProvider: React.FC<RuleProviderProps> = ({ children }) => {
   const getRulesByCategory = async (category: string): Promise<Rule[]> => {
     try {
       setLoading(true);
+      setError(null);
+      
       const response = await axios.get(`${API_URL}/api/rules/category/${category}`);
-      const categoryRules = response.data.rules;
-      setRules(categoryRules);
-      return categoryRules;
-    } catch (error) {
-      console.error('Error getting rules by category:', error);
+      return response.data.rules;
+    } catch (err) {
+      setError('Failed to fetch rules by category');
+      console.error('Error fetching rules by category:', err);
       return [];
     } finally {
       setLoading(false);
@@ -91,13 +97,13 @@ export const RuleProvider: React.FC<RuleProviderProps> = ({ children }) => {
   };
   
   return (
-    <RuleContext.Provider 
+    <RuleContext.Provider
       value={{
-        rules,
-        categories,
         loading,
-        searchRules,
+        error,
         getRuleById,
+        searchRules,
+        getCategories,
         getRulesByCategory
       }}
     >
