@@ -1,33 +1,75 @@
 import React from 'react';
-import { Box, Typography, Link, Container, Divider } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
+import { Box, Typography, Container, Link, Grid, Divider } from '@mui/material';
 
 const Footer: React.FC = () => {
   return (
-    <Box component="footer" sx={{ mt: 'auto', py: 3, bgcolor: 'grey.100' }}>
-      <Divider />
+    <Box 
+      component="footer" 
+      sx={{ 
+        py: 3, 
+        px: 2, 
+        mt: 'auto', 
+        backgroundColor: (theme) => theme.palette.grey[100]
+      }}
+    >
       <Container maxWidth="lg">
-        <Box sx={{ py: 3, display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, justifyContent: 'space-between', alignItems: 'center' }}>
-          <Typography variant="body2" color="text.secondary" align="center" sx={{ mb: { xs: 2, sm: 0 } }}>
-            © {new Date().getFullYear()} RuleBook Bot | NBA Rules Assistant
-          </Typography>
+        <Grid container spacing={4}>
+          <Grid item xs={12} sm={6} md={3}>
+            <Typography variant="h6" color="text.primary" gutterBottom>
+              RuleBook Bot
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Your AI assistant for NBA rules and regulations
+            </Typography>
+          </Grid>
           
-          <Box sx={{ display: 'flex', gap: 3 }}>
-            <Link component={RouterLink} to="/" color="inherit" underline="hover">
-              Home
-            </Link>
-            <Link component={RouterLink} to="/about" color="inherit" underline="hover">
-              About
-            </Link>
-            <Link href="https://official.nba.com/rulebook/" target="_blank" rel="noopener" color="inherit" underline="hover">
-              Official NBA Rules
-            </Link>
-          </Box>
-        </Box>
+          <Grid item xs={12} sm={6} md={3}>
+            <Typography variant="h6" color="text.primary" gutterBottom>
+              Navigation
+            </Typography>
+            <Typography variant="body2" paragraph>
+              <Link component={RouterLink} to="/" color="inherit">
+                Home
+              </Link>
+            </Typography>
+            <Typography variant="body2" paragraph>
+              <Link component={RouterLink} to="/about" color="inherit">
+                About
+              </Link>
+            </Typography>
+          </Grid>
+          
+          <Grid item xs={12} sm={6} md={3}>
+            <Typography variant="h6" color="text.primary" gutterBottom>
+              Resources
+            </Typography>
+            <Typography variant="body2" paragraph>
+              <Link href="https://official.nba.com/rulebook/" target="_blank" rel="noopener" color="inherit">
+                Official NBA Rulebook
+              </Link>
+            </Typography>
+            <Typography variant="body2" paragraph>
+              <Link href="https://videorulebook.nba.com/" target="_blank" rel="noopener" color="inherit">
+                NBA Video Rulebook
+              </Link>
+            </Typography>
+          </Grid>
+          
+          <Grid item xs={12} sm={6} md={3}>
+            <Typography variant="h6" color="text.primary" gutterBottom>
+              Disclaimer
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              This is an unofficial educational tool and is not affiliated with or endorsed by the NBA.
+            </Typography>
+          </Grid>
+        </Grid>
         
-        <Typography variant="caption" color="text.secondary" align="center" display="block">
-          This is an unofficial educational tool and is not affiliated with or endorsed by the NBA.
-          For official rules, please visit the <Link href="https://official.nba.com/rulebook/" target="_blank" rel="noopener">NBA Official Rulebook</Link>.
+        <Divider sx={{ my: 2 }} />
+        
+        <Typography variant="body2" color="text.secondary" align="center">
+          © {new Date().getFullYear()} RuleBook Bot. All rights reserved.
         </Typography>
       </Container>
     </Box>

@@ -1,116 +1,131 @@
 import React, { useState } from 'react';
-import { Link as RouterLink, useLocation } from 'react-router-dom';
-import { 
-  AppBar, 
-  Toolbar, 
-  Typography, 
-  Button, 
+import { Link as RouterLink } from 'react-router-dom';
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
   IconButton,
   Box,
+  Container,
+  useMediaQuery,
+  useTheme,
+  Menu,
+  MenuItem,
   Drawer,
   List,
   ListItem,
   ListItemText,
-  ListItemIcon,
-  useMediaQuery,
-  useTheme
+  Divider
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import HomeIcon from '@mui/icons-material/Home';
-import InfoIcon from '@mui/icons-material/Info';
-import SportsBasketballIcon from '@mui/icons-material/SportsBasketball';
+import SportsTwoToneIcon from '@mui/icons-material/SportsTwoTone';
 
 const Header: React.FC = () => {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const location = useLocation();
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   
-  const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
   };
   
-  const closeMenu = () => {
-    setMenuOpen(false);
-  };
-  
-  const navItems = [
-    { label: 'Home', path: '/', icon: <HomeIcon /> },
-    { label: 'About', path: '/about', icon: <InfoIcon /> },
+  const menuItems = [
+    { text: 'Home', path: '/' },
+    { text: 'About', path: '/about' }
   ];
   
-  return (
-    <AppBar position="sticky" elevation={0} color="default" sx={{ bgcolor: '#fff', borderBottom: '1px solid', borderColor: 'divider' }}>
-      <Toolbar>
-        <Box display="flex" alignItems="center" flexGrow={1}>
-          <SportsBasketballIcon sx={{ mr: 1, color: 'primary.main' }} />
-          <Typography 
-            variant="h6" 
+  const drawer = (
+    <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
+      <Typography variant="h6" sx={{ my: 2, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <SportsTwoToneIcon sx={{ mr: 1 }} />
+        RuleBook Bot
+      </Typography>
+      <Divider />
+      <List>
+        {menuItems.map((item) => (
+          <ListItem 
+            key={item.text} 
             component={RouterLink} 
+            to={item.path}
+            sx={{ textAlign: 'center', color: 'inherit', textDecoration: 'none' }}
+          >
+            <ListItemText primary={item.text} />
+          </ListItem>
+        ))}
+      </List>
+    </Box>
+  );
+  
+  return (
+    <AppBar position="sticky" color="primary" elevation={1}>
+      <Container maxWidth="xl">
+        <Toolbar disableGutters>
+          {/* Logo */}
+          <Typography
+            variant="h6"
+            component={RouterLink}
             to="/"
-            sx={{ 
-              color: 'text.primary', 
-              textDecoration: 'none', 
-              fontWeight: 700,
+            sx={{
+              mr: 2,
               display: 'flex',
-              alignItems: 'center' 
+              alignItems: 'center',
+              fontWeight: 700,
+              color: 'white',
+              textDecoration: 'none',
             }}
           >
+            <SportsTwoToneIcon sx={{ mr: 1 }} />
             RuleBook Bot
           </Typography>
-        </Box>
-        
-        {isMobile ? (
-          <>
-            <IconButton edge="start" color="inherit" aria-label="menu" onClick={toggleMenu}>
+          
+          <Box sx={{ flexGrow: 1 }} />
+          
+          {/* Desktop Navigation */}
+          {!isMobile && (
+            <Box sx={{ display: 'flex' }}>
+              {menuItems.map((item) => (
+                <Button
+                  key={item.text}
+                  component={RouterLink}
+                  to={item.path}
+                  sx={{ color: 'white' }}
+                >
+                  {item.text}
+                </Button>
+              ))}
+            </Box>
+          )}
+          
+          {/* Mobile Navigation */}
+          {isMobile && (
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              edge="end"
+              onClick={handleDrawerToggle}
+              sx={{ ml: 2 }}
+            >
               <MenuIcon />
             </IconButton>
-            
-            <Drawer anchor="right" open={menuOpen} onClose={closeMenu}>
-              <Box
-                sx={{ width: 250 }}
-                role="presentation"
-                onClick={closeMenu}
-                onKeyDown={closeMenu}
-              >
-                <List>
-                  {navItems.map((item) => (
-                    <ListItem 
-                      button 
-                      key={item.label} 
-                      component={RouterLink} 
-                      to={item.path}
-                      selected={location.pathname === item.path}
-                    >
-                      <ListItemIcon>
-                        {item.icon}
-                      </ListItemIcon>
-                      <ListItemText primary={item.label} />
-                    </ListItem>
-                  ))}
-                </List>
-              </Box>
-            </Drawer>
-          </>
-        ) : (
-          <Box>
-            {navItems.map((item) => (
-              <Button
-                key={item.label}
-                component={RouterLink}
-                to={item.path}
-                color={location.pathname === item.path ? 'primary' : 'inherit'}
-                sx={{ 
-                  mx: 1,
-                  fontWeight: location.pathname === item.path ? 600 : 400
-                }}
-              >
-                {item.label}
-              </Button>
-            ))}
-          </Box>
-        )}
-      </Toolbar>
+          )}
+        </Toolbar>
+      </Container>
+      
+      {/* Mobile Drawer */}
+      <Drawer
+        anchor="right"
+        open={mobileOpen}
+        onClose={handleDrawerToggle}
+        ModalProps={{ keepMounted: true }}
+        sx={{
+          display: { xs: 'block', md: 'none' },
+          '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 240 },
+        }}
+      >
+        {drawer}
+      </Drawer>
     </AppBar>
   );
 };
