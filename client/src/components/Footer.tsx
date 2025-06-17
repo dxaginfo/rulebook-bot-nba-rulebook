@@ -1,56 +1,34 @@
 import React from 'react';
-import { Box, Container, Typography, Link, Divider } from '@mui/material';
-import SportsBasketballIcon from '@mui/icons-material/SportsBasketball';
+import { Box, Typography, Link, Container, Divider } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
 
 const Footer: React.FC = () => {
   return (
-    <Box
-      component="footer"
-      sx={{
-        py: 3,
-        mt: 'auto',
-        backgroundColor: 'background.paper',
-        borderTop: '1px solid',
-        borderColor: 'divider'
-      }}
-    >
+    <Box component="footer" sx={{ mt: 'auto', py: 3, bgcolor: 'grey.100' }}>
+      <Divider />
       <Container maxWidth="lg">
-        <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, justifyContent: 'space-between', alignItems: 'center' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: { xs: 2, md: 0 } }}>
-            <SportsBasketballIcon color="primary" sx={{ mr: 1 }} />
-            <Typography variant="body2" color="text.secondary">
-              RuleBook Bot © {new Date().getFullYear()}
-            </Typography>
-          </Box>
+        <Box sx={{ py: 3, display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, justifyContent: 'space-between', alignItems: 'center' }}>
+          <Typography variant="body2" color="text.secondary" align="center" sx={{ mb: { xs: 2, sm: 0 } }}>
+            © {new Date().getFullYear()} RuleBook Bot | NBA Rules Assistant
+          </Typography>
           
-          <Box sx={{ display: 'flex', gap: 2 }}>
-            <Link href="/about" color="inherit" underline="hover">
-              <Typography variant="body2" color="text.secondary">
-                About
-              </Typography>
+          <Box sx={{ display: 'flex', gap: 3 }}>
+            <Link component={RouterLink} to="/" color="inherit" underline="hover">
+              Home
             </Link>
-            
-            <Divider orientation="vertical" flexItem />
-            
-            <Link 
-              href="https://official.nba.com/rulebook/" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              color="inherit"
-              underline="hover"
-            >
-              <Typography variant="body2" color="text.secondary">
-                Official NBA Rulebook
-              </Typography>
+            <Link component={RouterLink} to="/about" color="inherit" underline="hover">
+              About
             </Link>
-            
-            <Divider orientation="vertical" flexItem />
-            
-            <Typography variant="body2" color="text.secondary">
-              Not affiliated with NBA
-            </Typography>
+            <Link href="https://official.nba.com/rulebook/" target="_blank" rel="noopener" color="inherit" underline="hover">
+              Official NBA Rules
+            </Link>
           </Box>
         </Box>
+        
+        <Typography variant="caption" color="text.secondary" align="center" display="block">
+          This is an unofficial educational tool and is not affiliated with or endorsed by the NBA.
+          For official rules, please visit the <Link href="https://official.nba.com/rulebook/" target="_blank" rel="noopener">NBA Official Rulebook</Link>.
+        </Typography>
       </Container>
     </Box>
   );

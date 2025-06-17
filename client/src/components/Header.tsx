@@ -1,157 +1,116 @@
 import React, { useState } from 'react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Button,
-  Box,
+import { 
+  AppBar, 
+  Toolbar, 
+  Typography, 
+  Button, 
   IconButton,
+  Box,
   Drawer,
   List,
   ListItem,
   ListItemText,
+  ListItemIcon,
   useMediaQuery,
-  useTheme,
-  Container
+  useTheme
 } from '@mui/material';
-import SportsBasketballIcon from '@mui/icons-material/SportsBasketball';
 import MenuIcon from '@mui/icons-material/Menu';
-import InfoIcon from '@mui/icons-material/Info';
 import HomeIcon from '@mui/icons-material/Home';
+import InfoIcon from '@mui/icons-material/Info';
+import SportsBasketballIcon from '@mui/icons-material/SportsBasketball';
 
 const Header: React.FC = () => {
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   
-  const toggleDrawer = (open: boolean) => (
-    event: React.KeyboardEvent | React.MouseEvent
-  ) => {
-    if (
-      event.type === 'keydown' &&
-      ((event as React.KeyboardEvent).key === 'Tab' ||
-        (event as React.KeyboardEvent).key === 'Shift')
-    ) {
-      return;
-    }
-    
-    setDrawerOpen(open);
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
+  
+  const closeMenu = () => {
+    setMenuOpen(false);
   };
   
   const navItems = [
-    { text: 'Home', path: '/', icon: <HomeIcon /> },
-    { text: 'About', path: '/about', icon: <InfoIcon /> }
+    { label: 'Home', path: '/', icon: <HomeIcon /> },
+    { label: 'About', path: '/about', icon: <InfoIcon /> },
   ];
   
-  const drawer = (
-    <Box
-      sx={{ width: 250 }}
-      role="presentation"
-      onClick={toggleDrawer(false)}
-      onKeyDown={toggleDrawer(false)}
-    >
-      <List>
-        {navItems.map((item) => (
-          <ListItem 
-            button 
-            key={item.text} 
-            component={RouterLink} 
-            to={item.path}
-            selected={location.pathname === item.path}
-          >
-            <Box sx={{ mr: 2, color: 'primary.main' }}>
-              {item.icon}
-            </Box>
-            <ListItemText primary={item.text} />
-          </ListItem>
-        ))}
-      </List>
-    </Box>
-  );
-  
   return (
-    <AppBar position="static" color="default" elevation={0} sx={{ borderBottom: '1px solid', borderColor: 'divider' }}>
-      <Container maxWidth="lg">
-        <Toolbar disableGutters>
-          {/* Logo and Title */}
-          <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
-            <SportsBasketballIcon 
-              sx={{ 
-                mr: 1, 
-                fontSize: 28,
-                color: 'primary.main', 
-                animation: 'spin 8s linear infinite',
-                '@keyframes spin': {
-                  '0%': {
-                    transform: 'rotate(0deg)',
-                  },
-                  '100%': {
-                    transform: 'rotate(360deg)',
-                  },
-                },
-              }} 
-            />
-            <Typography 
-              variant="h6" 
-              component={RouterLink} 
-              to="/"
-              sx={{ 
-                fontWeight: 700, 
-                color: 'primary.main',
-                textDecoration: 'none',
-                display: 'flex',
-                alignItems: 'center'
-              }}
-            >
-              RuleBook Bot
-            </Typography>
-          </Box>
-          
-          {/* Desktop Navigation */}
-          {!isMobile && (
-            <Box sx={{ display: 'flex' }}>
-              {navItems.map((item) => (
-                <Button
-                  key={item.text}
-                  component={RouterLink}
-                  to={item.path}
-                  color="primary"
-                  sx={{ 
-                    mx: 1,
-                    fontWeight: location.pathname === item.path ? 700 : 400
-                  }}
-                  startIcon={item.icon}
-                >
-                  {item.text}
-                </Button>
-              ))}
-            </Box>
-          )}
-          
-          {/* Mobile Menu Button */}
-          {isMobile && (
-            <IconButton
-              color="primary"
-              aria-label="open drawer"
-              edge="start"
-              onClick={toggleDrawer(true)}
-            >
+    <AppBar position="sticky" elevation={0} color="default" sx={{ bgcolor: '#fff', borderBottom: '1px solid', borderColor: 'divider' }}>
+      <Toolbar>
+        <Box display="flex" alignItems="center" flexGrow={1}>
+          <SportsBasketballIcon sx={{ mr: 1, color: 'primary.main' }} />
+          <Typography 
+            variant="h6" 
+            component={RouterLink} 
+            to="/"
+            sx={{ 
+              color: 'text.primary', 
+              textDecoration: 'none', 
+              fontWeight: 700,
+              display: 'flex',
+              alignItems: 'center' 
+            }}
+          >
+            RuleBook Bot
+          </Typography>
+        </Box>
+        
+        {isMobile ? (
+          <>
+            <IconButton edge="start" color="inherit" aria-label="menu" onClick={toggleMenu}>
               <MenuIcon />
             </IconButton>
-          )}
-        </Toolbar>
-      </Container>
-      
-      {/* Mobile Navigation Drawer */}
-      <Drawer
-        anchor="right"
-        open={drawerOpen}
-        onClose={toggleDrawer(false)}
-      >
-        {drawer}
-      </Drawer>
+            
+            <Drawer anchor="right" open={menuOpen} onClose={closeMenu}>
+              <Box
+                sx={{ width: 250 }}
+                role="presentation"
+                onClick={closeMenu}
+                onKeyDown={closeMenu}
+              >
+                <List>
+                  {navItems.map((item) => (
+                    <ListItem 
+                      button 
+                      key={item.label} 
+                      component={RouterLink} 
+                      to={item.path}
+                      selected={location.pathname === item.path}
+                    >
+                      <ListItemIcon>
+                        {item.icon}
+                      </ListItemIcon>
+                      <ListItemText primary={item.label} />
+                    </ListItem>
+                  ))}
+                </List>
+              </Box>
+            </Drawer>
+          </>
+        ) : (
+          <Box>
+            {navItems.map((item) => (
+              <Button
+                key={item.label}
+                component={RouterLink}
+                to={item.path}
+                color={location.pathname === item.path ? 'primary' : 'inherit'}
+                sx={{ 
+                  mx: 1,
+                  fontWeight: location.pathname === item.path ? 600 : 400
+                }}
+              >
+                {item.label}
+              </Button>
+            ))}
+          </Box>
+        )}
+      </Toolbar>
     </AppBar>
   );
 };
