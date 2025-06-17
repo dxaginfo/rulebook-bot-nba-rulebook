@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useLocation } from 'react-router-dom';
 import {
   AppBar,
   Toolbar,
@@ -15,12 +15,14 @@ import {
   useTheme,
   Container
 } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
 import SportsBasketballIcon from '@mui/icons-material/SportsBasketball';
-import GitHubIcon from '@mui/icons-material/GitHub';
+import MenuIcon from '@mui/icons-material/Menu';
+import InfoIcon from '@mui/icons-material/Info';
+import HomeIcon from '@mui/icons-material/Home';
 
 const Header: React.FC = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const location = useLocation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   
@@ -34,16 +36,16 @@ const Header: React.FC = () => {
     ) {
       return;
     }
+    
     setDrawerOpen(open);
   };
   
   const navItems = [
-    { text: 'Home', path: '/' },
-    { text: 'About', path: '/about' },
-    { text: 'GitHub', path: 'https://github.com/dxaginfo/rulebook-bot-nba-rulebook', external: true }
+    { text: 'Home', path: '/', icon: <HomeIcon /> },
+    { text: 'About', path: '/about', icon: <InfoIcon /> }
   ];
   
-  const NavDrawer = () => (
+  const drawer = (
     <Box
       sx={{ width: 250 }}
       role="presentation"
@@ -54,13 +56,14 @@ const Header: React.FC = () => {
         {navItems.map((item) => (
           <ListItem 
             button 
-            key={item.text}
-            component={item.external ? 'a' : RouterLink}
-            to={!item.external ? item.path : undefined}
-            href={item.external ? item.path : undefined}
-            target={item.external ? '_blank' : undefined}
-            rel={item.external ? 'noopener noreferrer' : undefined}
+            key={item.text} 
+            component={RouterLink} 
+            to={item.path}
+            selected={location.pathname === item.path}
           >
+            <Box sx={{ mr: 2, color: 'primary.main' }}>
+              {item.icon}
+            </Box>
             <ListItemText primary={item.text} />
           </ListItem>
         ))}
@@ -69,65 +72,71 @@ const Header: React.FC = () => {
   );
   
   return (
-    <AppBar position="static" color="primary" elevation={0}>
+    <AppBar position="static" color="default" elevation={0} sx={{ borderBottom: '1px solid', borderColor: 'divider' }}>
       <Container maxWidth="lg">
-        <Toolbar sx={{ py: 1 }}>
-          {/* Logo */}
-          <Box 
-            component={RouterLink} 
-            to="/"
-            sx={{ 
-              display: 'flex', 
-              alignItems: 'center',
-              textDecoration: 'none',
-              color: 'inherit'
-            }}
-          >
-            <SportsBasketballIcon sx={{ mr: 1, fontSize: 32 }} />
-            <Typography variant="h6" component="div" sx={{ fontWeight: 700 }}>
+        <Toolbar disableGutters>
+          {/* Logo and Title */}
+          <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
+            <SportsBasketballIcon 
+              sx={{ 
+                mr: 1, 
+                fontSize: 28,
+                color: 'primary.main', 
+                animation: 'spin 8s linear infinite',
+                '@keyframes spin': {
+                  '0%': {
+                    transform: 'rotate(0deg)',
+                  },
+                  '100%': {
+                    transform: 'rotate(360deg)',
+                  },
+                },
+              }} 
+            />
+            <Typography 
+              variant="h6" 
+              component={RouterLink} 
+              to="/"
+              sx={{ 
+                fontWeight: 700, 
+                color: 'primary.main',
+                textDecoration: 'none',
+                display: 'flex',
+                alignItems: 'center'
+              }}
+            >
               RuleBook Bot
             </Typography>
           </Box>
           
           {/* Desktop Navigation */}
           {!isMobile && (
-            <Box sx={{ display: 'flex', ml: 'auto' }}>
+            <Box sx={{ display: 'flex' }}>
               {navItems.map((item) => (
-                item.external ? (
-                  <Button 
-                    key={item.text}
-                    color="inherit"
-                    href={item.path}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    startIcon={item.text === 'GitHub' ? <GitHubIcon /> : undefined}
-                    sx={{ ml: 2 }}
-                  >
-                    {item.text}
-                  </Button>
-                ) : (
-                  <Button 
-                    key={item.text}
-                    color="inherit"
-                    component={RouterLink}
-                    to={item.path}
-                    sx={{ ml: 2 }}
-                  >
-                    {item.text}
-                  </Button>
-                )
+                <Button
+                  key={item.text}
+                  component={RouterLink}
+                  to={item.path}
+                  color="primary"
+                  sx={{ 
+                    mx: 1,
+                    fontWeight: location.pathname === item.path ? 700 : 400
+                  }}
+                  startIcon={item.icon}
+                >
+                  {item.text}
+                </Button>
               ))}
             </Box>
           )}
           
-          {/* Mobile Navigation */}
+          {/* Mobile Menu Button */}
           {isMobile && (
             <IconButton
-              color="inherit"
+              color="primary"
               aria-label="open drawer"
-              edge="end"
+              edge="start"
               onClick={toggleDrawer(true)}
-              sx={{ ml: 'auto' }}
             >
               <MenuIcon />
             </IconButton>
@@ -135,13 +144,13 @@ const Header: React.FC = () => {
         </Toolbar>
       </Container>
       
-      {/* Mobile Drawer */}
+      {/* Mobile Navigation Drawer */}
       <Drawer
         anchor="right"
         open={drawerOpen}
         onClose={toggleDrawer(false)}
       >
-        <NavDrawer />
+        {drawer}
       </Drawer>
     </AppBar>
   );
