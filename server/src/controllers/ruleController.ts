@@ -1,9 +1,6 @@
 import { Request, Response } from 'express';
 import ruleService from '../services/ruleService';
 
-/**
- * Rule controller for handling rule-related requests
- */
 const ruleController = {
   /**
    * Get a rule by ID
@@ -34,15 +31,15 @@ const ruleController = {
    */
   searchRules: async (req: Request, res: Response) => {
     try {
-      const { q } = req.query;
+      const query = req.query.q as string;
       
-      if (!q) {
+      if (!query) {
         return res.status(400).json({ message: 'Search query is required' });
       }
       
-      const results = await ruleService.searchRules(q.toString());
+      const rules = await ruleService.searchRules(query);
       
-      return res.status(200).json({ results });
+      return res.status(200).json({ results: rules });
     } catch (error) {
       console.error('Error searching rules:', error);
       return res.status(500).json({ message: 'Failed to search rules' });
