@@ -3,23 +3,23 @@ import { createTheme } from '@mui/material/styles';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#006BB6', // NBA blue
-      light: '#338BC7',
-      dark: '#00487A',
-      contrastText: '#FFFFFF',
+      main: '#1d428a',  // NBA blue
+      light: '#4e6eb0',
+      dark: '#001c5c',
+      contrastText: '#ffffff',
     },
     secondary: {
-      main: '#ED174C', // NBA red
-      light: '#F14E77',
-      dark: '#A50F35',
-      contrastText: '#FFFFFF',
+      main: '#c8102e',  // NBA red
+      light: '#ff5357',
+      dark: '#8e0007',
+      contrastText: '#ffffff',
     },
     background: {
-      default: '#F8F9FA',
-      paper: '#FFFFFF',
+      default: '#f5f5f5',
+      paper: '#ffffff',
     },
     text: {
-      primary: '#333333',
+      primary: '#212121',
       secondary: '#666666',
     },
   },
@@ -43,10 +43,6 @@ const theme = createTheme({
     h6: {
       fontWeight: 500,
     },
-    button: {
-      fontWeight: 500,
-      textTransform: 'none',
-    },
   },
   shape: {
     borderRadius: 8,
@@ -55,31 +51,22 @@ const theme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
-          borderRadius: 8,
           textTransform: 'none',
-          boxShadow: 'none',
-          '&:hover': {
-            boxShadow: 'none',
-          },
-        },
-        contained: {
-          '&:hover': {
-            boxShadow: 'none',
-          },
-        },
-      },
-    },
-    MuiPaper: {
-      styleOverrides: {
-        root: {
-          borderRadius: 8,
+          fontWeight: 500,
         },
       },
     },
     MuiAppBar: {
       styleOverrides: {
         root: {
-          boxShadow: 'none',
+          boxShadow: '0px 1px 3px rgba(0, 0, 0, 0.1)',
+        },
+      },
+    },
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          overflow: 'hidden',
         },
       },
     },
