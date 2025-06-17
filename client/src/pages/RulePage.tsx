@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link as RouterLink } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import {
   Container,
   Typography,
@@ -7,121 +7,175 @@ import {
   Paper,
   Breadcrumbs,
   Link,
-  Chip,
+  Button,
   Divider,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
   CircularProgress,
-  Button
+  Alert,
+  Chip,
+  IconButton
 } from '@mui/material';
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import LensIcon from '@mui/icons-material/Lens';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import GavelIcon from '@mui/icons-material/Gavel';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
 import { useRule } from '../contexts/RuleContext';
 import { Rule } from '../types/rule';
-import NotFoundPage from './NotFoundPage';
 
 const RulePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const { loading, getRuleById } = useRule();
+  const navigate = useNavigate();
+  const { loading, error, getRuleById } = useRule();
   
   const [rule, setRule] = useState<Rule | null>(null);
-  const [notFound, setNotFound] = useState(false);
   
   useEffect(() => {
-    const fetchRule = async () => {
-      if (!id) {
-        setNotFound(true);
-        return;
-      }
-      
-      const ruleData = await getRuleById(id);
-      
-      if (!ruleData) {
-        setNotFound(true);
-      } else {
+    if (!id) return;
+    
+    const loadRule = async () => {
+      try {
+        const ruleData = await getRuleById(id);
         setRule(ruleData);
-        setNotFound(false);
+      } catch (err) {
+        console.error('Error loading rule:', err);
       }
     };
     
-    fetchRule();
+    loadRule();
   }, [id, getRuleById]);
   
-  if (notFound) {
-    return <NotFoundPage />;
+  const handleBack = () => {
+    navigate(-1);
+  };
+  
+  if (loading) {
+    return (
+      <Container maxWidth="md">
+        <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
+          <CircularProgress />
+        </Box>
+      </Container>
+    );
   }
   
-  if (loading || !rule) {
+  if (error) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '50vh' }}>
-        <CircularProgress />
-      </Box>
+      <Container maxWidth="md">
+        <Alert severity="error" sx={{ mt: 4 }}>
+          {error}
+        </Alert>
+      </Container>
+    );
+  }
+  
+  if (!rule) {
+    return (
+      <Container maxWidth="md">
+        <Alert severity="info" sx={{ mt: 4 }}>
+          Rule not found. The requested rule may have been moved or deleted.
+        </Alert>
+        <Button
+          startIcon={<ArrowBackIcon />}
+          onClick={handleBack}
+          sx={{ mt: 2 }}
+        >
+          Go Back
+        </Button>
+      </Container>
     );
   }
   
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="md">
       {/* Breadcrumbs */}
-      <Breadcrumbs 
-        separator={<NavigateNextIcon fontSize="small" />} 
-        aria-label="breadcrumb"
-        sx={{ mb: 3 }}
-      >
-        <Link component={RouterLink} to="/" color="inherit">
+      <Breadcrumbs sx={{ mb: 2 }}>
+        <Link
+          underline="hover"
+          color="inherit"
+          onClick={() => navigate('/')}
+          sx={{ cursor: 'pointer' }}
+        >
           Home
         </Link>
-        <Link component={RouterLink} to="/" color="inherit">
+        <Link
+          underline="hover"
+          color="inherit"
+          onClick={() => navigate('/')}
+          sx={{ cursor: 'pointer' }}
+        >
           Rules
         </Link>
         <Typography color="text.primary">{rule.title}</Typography>
       </Breadcrumbs>
       
-      {/* Back button */}
+      {/* Back Button */}
       <Button
-        component={RouterLink}
-        to="/"
         startIcon={<ArrowBackIcon />}
+        onClick={handleBack}
         sx={{ mb: 3 }}
+        variant="outlined"
       >
-        Back to Rules
+        Back
       </Button>
       
-      <Paper elevation={0} sx={{ p: 4, borderRadius: 2, border: '1px solid', borderColor: 'divider' }}>
+      <Paper 
+        elevation={0} 
+        sx={{ 
+          p: 4, 
+          borderRadius: 2, 
+          border: '1px solid', 
+          borderColor: 'divider'
+        }}
+      >
         {/* Header */}
         <Box sx={{ mb: 3 }}>
-          <Typography variant="h4" component="h1" gutterBottom>
-            {rule.title}
-          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+            <GavelIcon sx={{ mr: 1, color: 'primary.main' }} />
+            <Typography variant="h4" component="h1">
+              {rule.title}
+            </Typography>
+          </Box>
           
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
-            <Chip label={rule.category} color="primary" variant="outlined" />
-            <Chip label={rule.section} variant="outlined" />
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 1 }}>
+            <Chip 
+              label={rule.section} 
+              size="small" 
+              color="primary" 
+              variant="outlined" 
+            />
+            <Chip 
+              label={rule.category} 
+              size="small" 
+              color="secondary" 
+              variant="outlined" 
+            />
           </Box>
         </Box>
         
         <Divider sx={{ mb: 3 }} />
         
-        {/* Content */}
-        <Typography variant="body1" paragraph>
-          {rule.content}
-        </Typography>
+        {/* Rule Content */}
+        <Box sx={{ mb: 4 }}>
+          <Typography variant="body1" paragraph>
+            {rule.content}
+          </Typography>
+        </Box>
         
         {/* Examples */}
         {rule.examples && rule.examples.length > 0 && (
-          <Box sx={{ mt: 4 }}>
+          <Box sx={{ mb: 3 }}>
             <Typography variant="h6" gutterBottom>
               Examples
             </Typography>
             
-            <List disablePadding>
+            <List>
               {rule.examples.map((example, index) => (
-                <ListItem key={index} alignItems="flex-start" sx={{ pl: 0 }}>
-                  <ListItemIcon sx={{ minWidth: 32 }}>
-                    <LensIcon sx={{ fontSize: 10, color: 'primary.main' }} />
+                <ListItem key={index} alignItems="flex-start">
+                  <ListItemIcon>
+                    <CheckCircleOutlineIcon color="success" />
                   </ListItemIcon>
                   <ListItemText primary={example} />
                 </ListItem>
@@ -130,29 +184,13 @@ const RulePage: React.FC = () => {
           </Box>
         )}
         
-        {/* Info box */}
-        <Box 
-          sx={{ 
-            mt: 4, 
-            p: 2, 
-            bgcolor: 'info.light', 
-            color: 'info.contrastText',
-            borderRadius: 1,
-            display: 'flex',
-            alignItems: 'flex-start'
-          }}
-        >
-          <InfoOutlinedIcon sx={{ mr: 1 }} />
-          <Typography variant="body2">
-            This is an educational interpretation of the rule. For the official NBA rulebook, please visit the 
-            <Link 
-              href="https://official.nba.com/rulebook/" 
-              target="_blank" 
-              rel="noopener"
-              sx={{ ml: 0.5 }}
-            >
-              NBA Official Rulebook
-            </Link>.
+        <Divider sx={{ my: 3 }} />
+        
+        {/* Reference */}
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <MenuBookIcon sx={{ mr: 1, color: 'text.secondary' }} />
+          <Typography variant="body2" color="text.secondary">
+            Reference: Official NBA Rulebook, {rule.section}
           </Typography>
         </Box>
       </Paper>
