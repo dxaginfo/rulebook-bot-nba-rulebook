@@ -10,31 +10,28 @@ const chatService = {
   /**
    * Send a message to the chatbot
    * @param content Message content
-   * @returns Chat response from the API
+   * @returns ChatResponse from the server
    */
   sendMessage: async (content: string): Promise<ChatResponse> => {
     try {
       const response = await axios.post(`${API_URL}/api/chat/message`, { content });
       return response.data;
     } catch (error) {
-      console.error('API error when sending message:', error);
+      console.error('Error sending message:', error);
       throw error;
     }
   },
   
   /**
    * Get chat history
-   * @param limit Maximum number of messages to retrieve
-   * @returns Array of chat messages
+   * @returns Array of messages
    */
-  getChatHistory: async (limit = 50): Promise<Message[]> => {
+  getChatHistory: async (): Promise<Message[]> => {
     try {
-      const response = await axios.get(`${API_URL}/api/chat/history`, {
-        params: { limit }
-      });
+      const response = await axios.get(`${API_URL}/api/chat/history`);
       return response.data.messages;
     } catch (error) {
-      console.error('API error when getting chat history:', error);
+      console.error('Error getting chat history:', error);
       return [];
     }
   },
@@ -46,7 +43,7 @@ const chatService = {
     try {
       await axios.delete(`${API_URL}/api/chat/history`);
     } catch (error) {
-      console.error('API error when clearing chat history:', error);
+      console.error('Error clearing chat history:', error);
       throw error;
     }
   }
