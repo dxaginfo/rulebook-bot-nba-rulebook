@@ -1,0 +1,83 @@
+{
+  "sections": [
+    {
+      "id": "rule1",
+      "title": "Rule 1 - Court Dimensions and Equipment",
+      "subsections": [
+        {
+          "id": "rule1-1",
+          "title": "Section I - Court and Dimensions",
+          "content": "The playing court shall be measured and marked as shown in the court diagram. The court shall be marked with a boundary line, center line, center circle, free throw lanes and free throw lines, three-point field goal lines and hash marks, and baskets, backboards and backboard supports. The playing court shall be a rectangular surface free from obstructions with dimensions of 94 feet in length by 50 feet in width."
+        },
+        {
+          "id": "rule1-2",
+          "title": "Section II - Equipment",
+          "content": "The backboard shall be a flat surface of clear tempered glass, 6' horizontally and 3'6\" vertically, with a white rectangle painted on its face. The top of the rectangle's base shall be level with the basket ring and shall extend 24\" horizontally and 18\" vertically. The basket ring shall be 18\" in inside diameter with a white cord net 15\" to 18\" in length. The ring shall be painted orange, be suspended 10' above and parallel to the floor, and be rigidly attached to the backboard."
+        }
+      ]
+    },
+    {
+      "id": "rule2",
+      "title": "Rule 2 - Officials and Their Duties",
+      "subsections": [
+        {
+          "id": "rule2-1",
+          "title": "Section I - The Officials",
+          "content": "The game officials shall be a crew chief and one or two referees. The officials shall wear the uniform prescribed by the NBA. The crew chief shall designate one of the officials to toss the ball at the start of the game."
+        },
+        {
+          "id": "rule2-2",
+          "title": "Section II - Duties of the Officials",
+          "content": "The officials shall, prior to the start of the game, inspect and approve all equipment, including court, baskets, balls, backboards, timer's and scorer's equipment. The crew chief shall be the official in charge. The crew chief's duty shall be to administer the game in accordance with the official rules. The crew chief may consult with the other officials before making a decision. The crew chief shall have the power to make decisions on any point not specifically covered in the rules."
+        }
+      ]
+    },
+    {
+      "id": "rule10",
+      "title": "Rule 10 - Violations and Penalties",
+      "subsections": [
+        {
+          "id": "rule10-1",
+          "title": "Section I - Out-of-Bounds and Throw-In",
+          "content": "The ball is out-of-bounds when it touches a player who is out-of-bounds or any other person, the floor, or any object on, above or outside of a boundary or the supports or back of the backboard. The ball is caused to go out-of-bounds by the last player to touch it before it goes out, provided it is out-of-bounds because of touching something other than a player."
+        },
+        {
+          "id": "rule10-2",
+          "title": "Section II - Dribble",
+          "content": "A dribble is the movement of a live ball when a player in control of the ball bounces it on the floor or rolls or attempts to roll it along the floor. A player shall not dribble a second time after his first dribble has ended unless between the two dribbles he has lost control of a live ball on the playing court because of a shot, a bat by an opponent, a pass or fumble which has touched the floor or another player."
+        },
+        {
+          "id": "rule10-13",
+          "title": "Section XIII - Traveling",
+          "content": "A player who receives the ball while standing still may pivot, using either foot as the pivot foot. A pivot takes place when a player who is holding a live ball steps once or more than once in any direction with the same foot, with the other foot (pivot foot) in contact with the floor. A player who gathers the ball while progressing may take two steps in coming to a stop, passing or shooting the ball. A player who receives the ball while he is progressing, or upon completion of a dribble, may take two steps in coming to a stop, passing, or shooting the ball."
+        }
+      ]
+    }
+  ],
+  "keywords": {
+    "traveling": ["rule10-13"],
+    "double dribble": ["rule10-2"],
+    "out of bounds": ["rule10-1"],
+    "court dimensions": ["rule1-1"],
+    "backboard": ["rule1-2"],
+    "officials": ["rule2-1", "rule2-2"]
+  },
+  "examples": {
+    "rule10-13": [
+      {
+        "situation": "A player catches the ball while standing still with both feet on the floor. He then lifts his right foot and puts it back down while pivoting on his left foot.",
+        "ruling": "Legal play. The left foot is established as the pivot foot and the player may lift the right foot as many times as he wishes without violating."
+      },
+      {
+        "situation": "A player receives a pass while running, takes two steps, stops, and then begins a dribble.",
+        "ruling": "Legal play. A player who receives the ball while progressing may take two steps in coming to a stop before dribbling."
+      }
+    ],
+    "rule10-2": [
+      {
+        "situation": "A player dribbles the ball, picks it up with both hands, and then begins another dribble.",
+        "ruling": "Violation. A player may not dribble a second time after his first dribble has ended unless he has lost control of the ball."
+      }
+    ]
+  }
+}
