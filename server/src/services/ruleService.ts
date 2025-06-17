@@ -1,8 +1,9 @@
 import { Rule } from '../types/rule';
 
-// Mock database for NBA rules
-// In a real application, this would be stored in a database
-const rules: Rule[] = [
+/**
+ * Mock rule data - In a real application, this would be stored in a database
+ */
+const mockRules: Rule[] = [
   {
     id: 'rule-001',
     title: 'Traveling',
@@ -121,15 +122,19 @@ const rules: Rule[] = [
   }
 ];
 
+/**
+ * Rule Service to handle rule data operations
+ */
 const ruleService = {
   /**
-   * Get a rule by ID
+   * Get a rule by its ID
    * @param id Rule ID
-   * @returns Rule or null if not found
+   * @returns Rule object or null if not found
    */
   getRuleById: async (id: string): Promise<Rule | null> => {
     try {
-      const rule = rules.find(r => r.id === id);
+      // In a real app, this would query a database
+      const rule = mockRules.find(rule => rule.id === id);
       return rule || null;
     } catch (error) {
       console.error('Error getting rule by ID:', error);
@@ -138,15 +143,17 @@ const ruleService = {
   },
   
   /**
-   * Search for rules by query
+   * Search for rules based on a query string
    * @param query Search query
    * @returns Array of matching rules
    */
   searchRules: async (query: string): Promise<Rule[]> => {
     try {
+      // In a real app, this would use a more sophisticated search algorithm or database query
       const lowerQuery = query.toLowerCase();
       
-      return rules.filter(rule => {
+      // Simple search implementation
+      return mockRules.filter(rule => {
         return (
           rule.title.toLowerCase().includes(lowerQuery) ||
           rule.content.toLowerCase().includes(lowerQuery) ||
@@ -163,12 +170,13 @@ const ruleService = {
   
   /**
    * Get all rule categories
-   * @returns Array of unique categories
+   * @returns Array of category names
    */
   getCategories: async (): Promise<string[]> => {
     try {
-      const categories = rules.map(rule => rule.category);
-      return Array.from(new Set(categories));
+      // In a real app, this would query a database
+      const categories = mockRules.map(rule => rule.category);
+      return Array.from(new Set(categories)); // Remove duplicates
     } catch (error) {
       console.error('Error getting categories:', error);
       throw error;
@@ -176,18 +184,19 @@ const ruleService = {
   },
   
   /**
-   * Get rules by category
+   * Get all rules in a specific category
    * @param category Category name
-   * @returns Array of matching rules
+   * @returns Array of rules in the category
    */
   getRulesByCategory: async (category: string): Promise<Rule[]> => {
     try {
-      return rules.filter(rule => rule.category === category);
+      // In a real app, this would query a database
+      return mockRules.filter(rule => rule.category === category);
     } catch (error) {
       console.error('Error getting rules by category:', error);
       throw error;
     }
-  }
+  },
 };
 
 export default ruleService;
