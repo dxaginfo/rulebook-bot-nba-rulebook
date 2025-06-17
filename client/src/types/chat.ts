@@ -1,5 +1,5 @@
 /**
- * Represents a chat message
+ * Chat message interface
  */
 export interface Message {
   id: string;
@@ -10,17 +10,10 @@ export interface Message {
 }
 
 /**
- * Response from the chat API
+ * Chat response from API
  */
 export interface ChatResponse {
   id: string;
   message: string;
   citations?: string[];
-}
-
-/**
- * Response for chat history
- */
-export interface ChatHistoryResponse {
-  messages: Message[];
 }

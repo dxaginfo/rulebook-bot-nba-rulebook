@@ -1,11 +1,11 @@
 /**
- * Represents an NBA rule
+ * Rule interface
  */
 export interface Rule {
   id: string;
   title: string;
   category: string;
-  content: string;
   section: string;
+  content: string;
   examples?: string[];
 }
