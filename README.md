@@ -1,108 +1,107 @@
-# RuleBook Bot: NBA Rulebook Assistant
+# RuleBook Bot - NBA Rulebook Assistant
 
-A conversational AI assistant that helps users understand and navigate the NBA rulebook through natural language interactions.
+RuleBook Bot is an interactive web application that helps users understand and navigate the complex rules of professional basketball. Using a conversational AI interface and structured rule browser, it makes the NBA rulebook more accessible and understandable for fans, players, and coaches.
 
-## 🏀 Overview
+## Features
 
-The RuleBook Bot is an interactive chatbot designed to make the NBA rulebook more accessible and easier to understand. Users can ask questions about specific rules, situations, or interpretations in natural language, and receive accurate, contextual responses with references to the official rulebook.
+- **AI-Powered Rule Assistant**: Ask questions about NBA rules in natural language and get clear, concise answers
+- **Comprehensive Rule Search**: Search through the entire NBA rulebook for specific terms, violations, or procedures
+- **Structured Rule Browser**: Browse rules by category for easy navigation
+- **Practical Examples**: Learn through real-world examples of rule applications
+- **Rule Citations**: Click on rule citations to view detailed explanations
 
-![RuleBook Bot Screenshot](docs/screenshots/placeholder.png)
+## Architecture
 
-## ✨ Features
-
-- **Natural Language Rule Queries**: Ask about any NBA rule in conversational language
-- **Rule Citations**: Bot responses include specific rule citations for reference
-- **Interactive Rule Browsing**: Explore the rulebook by sections and categories
-- **Example Scenarios**: View practical examples of rule applications
-- **Responsive Design**: Works seamlessly on desktop and mobile devices
-
-## 🛠️ Technology Stack
+The application is built with a modern tech stack:
 
 ### Frontend
-- React.js with TypeScript
-- Material-UI component framework
-- Context API for state management
+
+- React with TypeScript
+- Material UI for component styling
 - React Router for navigation
+- Context API for state management
 
 ### Backend
+
 - Node.js with Express
-- MongoDB for data storage
-- LLM integration for natural language understanding
 - TypeScript for type safety
+- RESTful API architecture
 
-### AI/ML
-- Fine-tuned language model on NBA rulebook content
-- Semantic search for relevant rule identification
-- Context-aware response generation
+## Screenshots
 
-## 🚀 Getting Started
+[Coming soon]
+
+## Development
 
 ### Prerequisites
 
-- Node.js (v14+)
-- MongoDB
-- npm or yarn
+- Node.js 14+ and npm
+- TypeScript
 
-### Installation
+### Setup Instructions
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/dxaginfo/rulebook-bot-nba-rulebook.git
-   cd rulebook-bot-nba-rulebook
-   ```
+1. Clone the repository
 
-2. Install dependencies:
-   ```bash
-   # Install server dependencies
-   cd server
-   npm install
+```bash
+git clone https://github.com/dxaginfo/rulebook-bot-nba-rulebook.git
+cd rulebook-bot-nba-rulebook
+```
 
-   # Install client dependencies
-   cd ../client
-   npm install
-   ```
+2. Install dependencies for both client and server
 
-3. Set up environment variables:
-   - Create `.env` files in both client and server directories based on provided examples
+```bash
+# Install server dependencies
+cd server
+npm install
 
-4. Start the development servers:
-   ```bash
-   # Start the backend server
-   cd server
-   npm run dev
+# Install client dependencies
+cd ../client
+npm install
+```
 
-   # In a separate terminal, start the frontend
-   cd client
-   npm start
-   ```
+3. Run the development environment
 
-5. Access the application at `http://localhost:3000`
+```bash
+# Start the server (from the server directory)
+npm run dev
 
-## 📚 Documentation
+# In a separate terminal, start the client (from the client directory)
+npm start
+```
 
-- [Architecture Overview](docs/architecture.md)
-- [API Documentation](server/README.md)
-- [Frontend Documentation](client/README.md)
-- [Model Training](models/README.md)
+4. Access the application at `http://localhost:3000`
 
-## 🤝 Contributing
+## Deployment
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+The application is set up for easy deployment:
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+1. Build the client
 
-## 📝 License
+```bash
+cd client
+npm run build
+```
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+2. Build the server
 
-## 📬 Contact
+```bash
+cd server
+npm run build
+```
 
-For questions or feedback, please open an issue in the GitHub repository.
+3. Start the production server
 
----
+```bash
+cd server
+npm start
+```
 
-*This project is not affiliated with or endorsed by the National Basketball Association (NBA). The NBA rulebook content is used for educational purposes.*
+## Disclaimer
+
+RuleBook Bot is an unofficial educational tool and is not affiliated with or endorsed by the National Basketball Association (NBA). The information provided is intended for educational purposes only.
+
+For official rules and interpretations, please refer to the official NBA rulebook and other NBA publications. This application should not be used for making official rule determinations in professional basketball games.
+
+## License
+
+MIT
