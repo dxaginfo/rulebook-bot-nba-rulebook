@@ -1,192 +1,199 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {
   Box,
+  Typography,
   TextField,
   IconButton,
   Paper,
-  Typography,
   Divider,
   InputAdornment,
   Button,
-  Tooltip
+  CircularProgress
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
-import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
+import DeleteIcon from '@mui/icons-material/Delete';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import MessageBubble from './MessageBubble';
 import { useChat } from '../contexts/ChatContext';
 
 const ChatInterface: React.FC = () => {
-  const { messages, loading, sendMessage, clearChat } = useChat();
-  const [inputValue, setInputValue] = useState('');
+  const { messages, loading, error, sendMessage, clearChat } = useChat();
+  const [input, setInput] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   
-  // Scroll to bottom when messages change
+  // Auto-scroll to bottom of messages
   useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
   
-  const handleSendMessage = () => {
-    if (inputValue.trim() && !loading) {
-      sendMessage(inputValue.trim());
-      setInputValue('');
-    }
+  // Handle input change
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInput(e.target.value);
   };
   
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.target.value);
+  // Handle message send
+  const handleSendMessage = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (!input.trim() || loading) return;
+    
+    await sendMessage(input);
+    setInput('');
   };
   
-  const handleKeyPress = (event: React.KeyboardEvent) => {
-    if (event.key === 'Enter' && !event.shiftKey) {
-      event.preventDefault();
-      handleSendMessage();
-    }
+  // Handle example question click
+  const handleExampleClick = (question: string) => {
+    setInput(question);
   };
   
-  const handleClearChat = () => {
-    clearChat();
-  };
-  
-  const getSampleQuestions = () => [
-    'What is a traveling violation?',
-    'How does the shot clock work?',
-    'What are the dimensions of an NBA court?',
-    'What is goaltending?',
-    'How many personal fouls are players allowed?'
+  // Example questions
+  const exampleQuestions = [
+    'What is the shot clock rule in the NBA?',
+    'Explain the traveling violation',
+    'What are the NBA court dimensions?',
+    'How many fouls before fouling out?',
+    'What is goaltending?'
   ];
   
   return (
-    <Paper 
-      elevation={0} 
-      sx={{ 
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        overflow: 'hidden'
-      }}
-    >
-      {/* Chat Header */}
-      <Box sx={{ p: 2, borderBottom: '1px solid', borderColor: 'divider', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Typography variant="h6">Chat with RuleBook Bot</Typography>
+    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+      {/* Header */}
+      <Box sx={{ 
+        p: 2, 
+        bgcolor: 'primary.main', 
+        color: 'white',
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'space-between'
+      }}>
+        <Typography variant="h6">NBA Rules Assistant</Typography>
         
-        <Tooltip title="Clear conversation history">
-          <IconButton 
-            onClick={handleClearChat}
-            disabled={messages.length === 0}
-            color="default"
-            size="small"
-          >
-            <DeleteSweepIcon />
-          </IconButton>
-        </Tooltip>
+        <IconButton 
+          color="inherit" 
+          onClick={clearChat}
+          disabled={loading || messages.length === 0}
+          aria-label="Clear chat"
+          size="small"
+        >
+          <DeleteIcon />
+        </IconButton>
       </Box>
       
-      {/* Chat Messages */}
-      <Box 
-        sx={{ 
-          flexGrow: 1, 
-          overflow: 'auto',
-          p: 2,
-          display: 'flex',
-          flexDirection: 'column',
-          bgcolor: 'grey.50'
-        }}
-      >
+      {/* Messages Area */}
+      <Box sx={{ 
+        flexGrow: 1, 
+        overflow: 'auto', 
+        p: 2,
+        display: 'flex',
+        flexDirection: 'column'
+      }}>
         {messages.length === 0 ? (
-          <Box 
-            sx={{ 
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: '100%',
-              textAlign: 'center',
-              px: 2
-            }}
-          >
-            <InfoOutlinedIcon sx={{ fontSize: 48, color: 'primary.main', mb: 2, opacity: 0.8 }} />
-            <Typography variant="h6" gutterBottom>
-              Welcome to RuleBook Bot
-            </Typography>
-            <Typography variant="body2" color="text.secondary" paragraph>
-              Ask me any question about NBA rules and regulations.
+          <Box sx={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            alignItems: 'center', 
+            justifyContent: 'center',
+            height: '100%',
+            p: 3,
+            textAlign: 'center' 
+          }}>
+            <HelpOutlineIcon sx={{ fontSize: 48, color: 'primary.main', mb: 2 }} />
+            <Typography variant="h6" gutterBottom>Ask about NBA Rules</Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+              I can answer questions about official NBA rules, violations, procedures, and more.
             </Typography>
             
-            <Box sx={{ width: '100%', maxWidth: 600, mt: 3 }}>
-              <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
-                Try asking:
-              </Typography>
-              
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, justifyContent: 'center' }}>
-                {getSampleQuestions().map((question, index) => (
-                  <Button 
-                    key={index}
-                    variant="outlined"
-                    size="small"
-                    onClick={() => {
-                      setInputValue(question);
-                      // Focus on input after setting value
-                      setTimeout(() => {
-                        document.getElementById('chat-input')?.focus();
-                      }, 100);
-                    }}
-                    sx={{ 
-                      borderRadius: 4,
-                      textTransform: 'none',
-                      py: 0.5,
-                      px: 1.5,
-                      mb: 1
-                    }}
-                  >
-                    {question}
-                  </Button>
-                ))}
-              </Box>
+            <Typography variant="subtitle2" sx={{ mb: 1 }}>
+              Try asking:
+            </Typography>
+            
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 1 }}>
+              {exampleQuestions.map((question, index) => (
+                <Button 
+                  key={index} 
+                  variant="outlined" 
+                  size="small"
+                  onClick={() => handleExampleClick(question)}
+                  sx={{ 
+                    borderRadius: 4,
+                    textTransform: 'none',
+                    px: 1.5,
+                    fontSize: '0.75rem' 
+                  }}
+                >
+                  {question}
+                </Button>
+              ))}
             </Box>
           </Box>
         ) : (
-          <>
-            {messages.map((message) => (
-              <MessageBubble key={message.id} message={message} />
-            ))}
-            <div ref={messagesEndRef} />
-          </>
+          messages.map((message) => (
+            <MessageBubble key={message.id} message={message} />
+          ))
+        )}
+        
+        {/* Auto-scroll anchor */}
+        <div ref={messagesEndRef} />
+        
+        {/* Loading indicator */}
+        {loading && (
+          <Box sx={{ display: 'flex', justifyContent: 'center', my: 2 }}>
+            <CircularProgress size={24} />
+          </Box>
+        )}
+        
+        {/* Error message */}
+        {error && (
+          <Box sx={{ 
+            p: 2, 
+            bgcolor: 'error.light', 
+            color: 'error.contrastText',
+            borderRadius: 1,
+            mb: 2 
+          }}>
+            <Typography variant="body2">{error}</Typography>
+          </Box>
         )}
       </Box>
       
-      {/* Chat Input */}
+      {/* Input Area */}
       <Box sx={{ p: 2, borderTop: '1px solid', borderColor: 'divider' }}>
-        <TextField
-          id="chat-input"
-          fullWidth
-          variant="outlined"
-          placeholder="Type your question about NBA rules..."
-          value={inputValue}
-          onChange={handleInputChange}
-          onKeyPress={handleKeyPress}
-          disabled={loading}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  color="primary"
-                  onClick={handleSendMessage}
-                  disabled={!inputValue.trim() || loading}
-                >
-                  <SendIcon />
-                </IconButton>
-              </InputAdornment>
-            )
-          }}
-        />
-        <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 1, textAlign: 'center' }}>
-          {loading ? 'RuleBook Bot is thinking...' : 'Ask any question about NBA rules and regulations'}
+        <Box component="form" onSubmit={handleSendMessage}>
+          <TextField
+            fullWidth
+            placeholder="Ask about NBA rules..."
+            value={input}
+            onChange={handleInputChange}
+            disabled={loading}
+            autoComplete="off"
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton 
+                    edge="end" 
+                    color="primary" 
+                    onClick={() => handleSendMessage()}
+                    disabled={!input.trim() || loading}
+                    aria-label="send message"
+                  >
+                    <SendIcon />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Box>
+        
+        <Typography 
+          variant="caption" 
+          color="text.secondary" 
+          sx={{ display: 'flex', alignItems: 'center', mt: 1 }}
+        >
+          <InfoOutlinedIcon fontSize="inherit" sx={{ mr: 0.5 }} />
+          For educational purposes. Not an official NBA resource.
         </Typography>
       </Box>
-    </Paper>
+    </Box>
   );
 };
 
