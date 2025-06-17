@@ -1,9 +1,5 @@
 /**
- * Type definitions for chat functionality
- */
-
-/**
- * Represents a chat message
+ * Interface for a chat message
  */
 export interface Message {
   /**
@@ -12,12 +8,12 @@ export interface Message {
   id: string;
   
   /**
-   * Message content
+   * The message content
    */
   content: string;
   
   /**
-   * Message role (user or bot)
+   * The message role (user or bot)
    */
   role: 'user' | 'bot';
   
@@ -27,17 +23,37 @@ export interface Message {
   timestamp: string;
   
   /**
-   * Optional array of rule citations referenced in the message
+   * Rule citations referenced in the message (for bot responses)
    */
   citations?: string[];
+}
+
+/**
+ * Interface for the chat API response
+ */
+export interface ChatResponse {
+  /**
+   * Unique identifier for the message
+   */
+  id: string;
   
   /**
-   * Flag indicating if this is a typing indicator
+   * The response message content
    */
-  isTyping?: boolean;
+  message: string;
   
   /**
-   * Flag indicating if this message represents an error
+   * Rule citations referenced in the response
    */
-  isError?: boolean;
+  citations: string[];
+}
+
+/**
+ * Interface for chat history response
+ */
+export interface ChatHistoryResponse {
+  /**
+   * Array of messages in the chat history
+   */
+  messages: Message[];
 }
