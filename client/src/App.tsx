@@ -1,36 +1,41 @@
 import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ThemeProvider, createTheme, CssBaseline, Box, Container } from '@mui/material';
-import Header from './components/Header';
-import ChatInterface from './components/ChatInterface';
 import { ChatProvider } from './contexts/ChatContext';
 import { RuleProvider } from './contexts/RuleContext';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import HomePage from './pages/HomePage';
+import RulePage from './pages/RulePage';
+import AboutPage from './pages/AboutPage';
+import NotFoundPage from './pages/NotFoundPage';
 
 // Create a custom theme
 const theme = createTheme({
   palette: {
     primary: {
       main: '#006BB6', // NBA blue
-      light: '#1888D3',
-      dark: '#004D83'
+      dark: '#00487A',
+      light: '#338DC7'
     },
     secondary: {
       main: '#ED174C', // NBA red
-      light: '#FF4472',
-      dark: '#C00030'
+      dark: '#BF0D35',
+      light: '#F14971'
     },
     background: {
-      default: '#f5f7f9'
+      default: '#FAFAFA'
     }
   },
   typography: {
     fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
     h1: {
-      fontWeight: 600
+      fontWeight: 700
     },
     h2: {
       fontWeight: 600
     },
-    h6: {
+    h3: {
       fontWeight: 600
     }
   },
@@ -43,6 +48,13 @@ const theme = createTheme({
           fontWeight: 600
         }
       }
+    },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          borderRadius: 8
+        }
+      }
     }
   }
 });
@@ -53,25 +65,35 @@ const App: React.FC = () => {
       <CssBaseline />
       <ChatProvider>
         <RuleProvider>
-          <Box sx={{ 
-            display: 'flex', 
-            flexDirection: 'column', 
-            minHeight: '100vh'
-          }}>
-            <Header />
-            <Container 
-              maxWidth="lg" 
-              sx={{ 
-                flexGrow: 1, 
-                display: 'flex', 
-                flexDirection: 'column',
-                py: 3,
-                height: 'calc(100vh - 64px)' // Full height minus header
-              }}
-            >
-              <ChatInterface />
-            </Container>
-          </Box>
+          <Router>
+            <Box sx={{ 
+              display: 'flex', 
+              flexDirection: 'column', 
+              minHeight: '100vh' 
+            }}>
+              <Header />
+              
+              <Container 
+                component="main" 
+                maxWidth="lg" 
+                sx={{ 
+                  flexGrow: 1, 
+                  py: 4,
+                  display: 'flex',
+                  flexDirection: 'column'
+                }}
+              >
+                <Routes>
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="/rule/:id" element={<RulePage />} />
+                  <Route path="/about" element={<AboutPage />} />
+                  <Route path="*" element={<NotFoundPage />} />
+                </Routes>
+              </Container>
+              
+              <Footer />
+            </Box>
+          </Router>
         </RuleProvider>
       </ChatProvider>
     </ThemeProvider>
