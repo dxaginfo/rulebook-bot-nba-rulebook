@@ -2,49 +2,47 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { Message, ChatResponse } from '../types/chat';
 import chatService from '../services/chatService';
 
-interface ChatContextType {
+interface ChatContextProps {
   messages: Message[];
   loading: boolean;
   sendMessage: (content: string) => Promise<void>;
   clearChat: () => Promise<void>;
 }
 
-const ChatContext = createContext<ChatContextType | undefined>(undefined);
+const ChatContext = createContext<ChatContextProps>({ 
+  messages: [],
+  loading: false,
+  sendMessage: async () => {},
+  clearChat: async () => {}
+});
 
 interface ChatProviderProps {
   children: ReactNode;
 }
 
-/**
- * Provider component for chat functionality
- */
 export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
   const [messages, setMessages] = useState<Message[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
   
   // Load chat history when component mounts
   useEffect(() => {
     const loadChatHistory = async () => {
       try {
-        setLoading(true);
         const history = await chatService.getChatHistory();
         setMessages(history);
       } catch (error) {
         console.error('Failed to load chat history:', error);
-      } finally {
-        setLoading(false);
       }
     };
     
     loadChatHistory();
   }, []);
   
-  /**
-   * Send a message and get a response
-   */
   const sendMessage = async (content: string) => {
     try {
-      // Add user message to state
+      setLoading(true);
+      
+      // Add user message to UI immediately
       const userMessage: Message = {
         id: `user-${Date.now()}`,
         content,
@@ -52,13 +50,12 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
         timestamp: new Date().toISOString()
       };
       
-      setMessages(prevMessages => [...prevMessages, userMessage]);
-      setLoading(true);
+      setMessages(prev => [...prev, userMessage]);
       
-      // Get response from API
+      // Send message to API
       const response = await chatService.sendMessage(content);
       
-      // Add bot response to state
+      // Add bot response to UI
       const botMessage: Message = {
         id: response.id,
         content: response.message,
@@ -67,36 +64,30 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
         citations: response.citations
       };
       
-      setMessages(prevMessages => [...prevMessages, botMessage]);
+      setMessages(prev => [...prev, botMessage]);
     } catch (error) {
-      console.error('Failed to send message:', error);
+      console.error('Error sending message:', error);
       
       // Add error message
       const errorMessage: Message = {
         id: `error-${Date.now()}`,
-        content: 'Sorry, I encountered an error processing your message. Please try again.',
+        content: 'Sorry, I encountered an error processing your request. Please try again.',
         role: 'bot',
         timestamp: new Date().toISOString()
       };
       
-      setMessages(prevMessages => [...prevMessages, errorMessage]);
+      setMessages(prev => [...prev, errorMessage]);
     } finally {
       setLoading(false);
     }
   };
   
-  /**
-   * Clear chat history
-   */
   const clearChat = async () => {
     try {
-      setLoading(true);
       await chatService.clearChatHistory();
       setMessages([]);
     } catch (error) {
-      console.error('Failed to clear chat history:', error);
-    } finally {
-      setLoading(false);
+      console.error('Error clearing chat:', error);
     }
   };
   
@@ -107,15 +98,4 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
   );
 };
 
-/**
- * Hook to use the chat context
- */
-export const useChat = (): ChatContextType => {
-  const context = useContext(ChatContext);
-  
-  if (context === undefined) {
-    throw new Error('useChat must be used within a ChatProvider');
-  }
-  
-  return context;
-};
+export const useChat = () => useContext(ChatContext);
