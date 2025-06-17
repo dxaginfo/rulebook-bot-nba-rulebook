@@ -4,22 +4,22 @@ const theme = createTheme({
   palette: {
     primary: {
       main: '#006BB6', // NBA blue
-      light: '#64B5F6',
-      dark: '#004D8C',
-      contrastText: '#fff',
+      light: '#338BC7',
+      dark: '#00487A',
+      contrastText: '#FFFFFF',
     },
     secondary: {
-      main: '#E03A3E', // NBA red
-      light: '#FF6659',
-      dark: '#A8001A',
-      contrastText: '#fff',
+      main: '#ED174C', // NBA red
+      light: '#F14E77',
+      dark: '#A50F35',
+      contrastText: '#FFFFFF',
     },
     background: {
-      default: '#f9f9f9',
-      paper: '#fff',
+      default: '#F8F9FA',
+      paper: '#FFFFFF',
     },
     text: {
-      primary: '#212121',
+      primary: '#333333',
       secondary: '#666666',
     },
   },
@@ -44,8 +44,8 @@ const theme = createTheme({
       fontWeight: 500,
     },
     button: {
-      textTransform: 'none',
       fontWeight: 500,
+      textTransform: 'none',
     },
   },
   shape: {
@@ -57,15 +57,14 @@ const theme = createTheme({
         root: {
           borderRadius: 8,
           textTransform: 'none',
-          fontWeight: 500,
           boxShadow: 'none',
           '&:hover': {
-            boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
+            boxShadow: 'none',
           },
         },
         contained: {
           '&:hover': {
-            boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)',
+            boxShadow: 'none',
           },
         },
       },
@@ -73,41 +72,14 @@ const theme = createTheme({
     MuiPaper: {
       styleOverrides: {
         root: {
-          borderRadius: 12,
-        },
-        elevation1: {
-          boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.05)',
+          borderRadius: 8,
         },
       },
     },
     MuiAppBar: {
       styleOverrides: {
         root: {
-          boxShadow: '0px 1px 4px rgba(0, 0, 0, 0.05)',
-        },
-      },
-    },
-    MuiCard: {
-      styleOverrides: {
-        root: {
-          borderRadius: 12,
-          boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.05)',
-        },
-      },
-    },
-    MuiTextField: {
-      styleOverrides: {
-        root: {
-          '& .MuiOutlinedInput-root': {
-            borderRadius: 8,
-          },
-        },
-      },
-    },
-    MuiChip: {
-      styleOverrides: {
-        root: {
-          borderRadius: 16,
+          boxShadow: 'none',
         },
       },
     },
