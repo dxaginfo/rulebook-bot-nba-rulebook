@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { ThemeProvider, CssBaseline, Container, Box } from '@mui/material';
+import { ThemeProvider, CssBaseline, Container } from '@mui/material';
 import theme from './theme';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -11,41 +11,30 @@ import NotFoundPage from './pages/NotFoundPage';
 import { ChatProvider } from './contexts/ChatContext';
 import { RuleProvider } from './contexts/RuleContext';
 
-function App() {
+const App: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <ChatProvider>
         <RuleProvider>
           <Router>
-            <Box sx={{ 
-              display: 'flex', 
-              flexDirection: 'column', 
-              minHeight: '100vh' 
-            }}>
+            <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
               <Header />
-              
-              <Box sx={{ 
-                flexGrow: 1, 
-                py: 4 
-              }}>
-                <Container maxWidth="lg">
-                  <Routes>
-                    <Route path="/" element={<HomePage />} />
-                    <Route path="/about" element={<AboutPage />} />
-                    <Route path="/rule/:id" element={<RulePage />} />
-                    <Route path="*" element={<NotFoundPage />} />
-                  </Routes>
-                </Container>
-              </Box>
-              
+              <Container component="main" sx={{ flexGrow: 1, py: 4 }}>
+                <Routes>
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="/about" element={<AboutPage />} />
+                  <Route path="/rule/:id" element={<RulePage />} />
+                  <Route path="*" element={<NotFoundPage />} />
+                </Routes>
+              </Container>
               <Footer />
-            </Box>
+            </div>
           </Router>
         </RuleProvider>
       </ChatProvider>
     </ThemeProvider>
   );
-}
+};
 
 export default App;
