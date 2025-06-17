@@ -1,6 +1,3 @@
-/**
- * Rule interface
- */
 export interface Rule {
   id: string;
   title: string;

@@ -1,6 +1,3 @@
-/**
- * Chat message interface
- */
 export interface Message {
   id: string;
   content: string;
@@ -9,9 +6,6 @@ export interface Message {
   citations?: string[];
 }
 
-/**
- * Chat response from API
- */
 export interface ChatResponse {
   id: string;
   message: string;
