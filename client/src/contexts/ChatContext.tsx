@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { Message, ChatResponse } from '../types/chat';
+import { Message } from '../types/chat';
 import chatService from '../services/chatService';
 
 interface ChatContextProps {
@@ -9,7 +9,7 @@ interface ChatContextProps {
   clearChat: () => Promise<void>;
 }
 
-const ChatContext = createContext<ChatContextProps>({ 
+const ChatContext = createContext<ChatContextProps>({
   messages: [],
   loading: false,
   sendMessage: async () => {},
@@ -38,21 +38,21 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
     loadChatHistory();
   }, []);
   
-  const sendMessage = async (content: string) => {
+  const sendMessage = async (content: string): Promise<void> => {
     try {
       setLoading(true);
       
       // Add user message to UI immediately
       const userMessage: Message = {
-        id: `user-${Date.now()}`,
+        id: `temp-${Date.now()}`,
         content,
         role: 'user',
         timestamp: new Date().toISOString()
       };
       
-      setMessages(prev => [...prev, userMessage]);
+      setMessages(prevMessages => [...prevMessages, userMessage]);
       
-      // Send message to API
+      // Send to API and get response
       const response = await chatService.sendMessage(content);
       
       // Add bot response to UI
@@ -64,25 +64,20 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
         citations: response.citations
       };
       
-      setMessages(prev => [...prev, botMessage]);
+      setMessages(prevMessages => [
+        ...prevMessages.filter(msg => msg.id !== userMessage.id),
+        userMessage,
+        botMessage
+      ]);
     } catch (error) {
       console.error('Error sending message:', error);
-      
-      // Add error message
-      const errorMessage: Message = {
-        id: `error-${Date.now()}`,
-        content: 'Sorry, I encountered an error processing your request. Please try again.',
-        role: 'bot',
-        timestamp: new Date().toISOString()
-      };
-      
-      setMessages(prev => [...prev, errorMessage]);
+      // Handle error - could add an error message to the UI
     } finally {
       setLoading(false);
     }
   };
   
-  const clearChat = async () => {
+  const clearChat = async (): Promise<void> => {
     try {
       await chatService.clearChatHistory();
       setMessages([]);
@@ -92,7 +87,14 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
   };
   
   return (
-    <ChatContext.Provider value={{ messages, loading, sendMessage, clearChat }}>
+    <ChatContext.Provider 
+      value={{
+        messages,
+        loading,
+        sendMessage,
+        clearChat
+      }}
+    >
       {children}
     </ChatContext.Provider>
   );
